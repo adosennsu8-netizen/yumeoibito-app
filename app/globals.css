@@ -1,0 +1,696 @@
+/* ===========================================================
+   BLOSSOM — 共通スタイル
+=========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
+
+:root {
+  --navy: #1A1530;
+  --cream: #FFF8F0;
+  --paper: #FFFFFF;
+  --coral: #D85A30;
+  --coral-dark: #99391B;
+  --coral-light: #FAECE7;
+  --amber: #E8923A;
+  --amber-light: #FAEEDA;
+  --purple: #534AB7;
+  --purple-dark: #3C3489;
+  --purple-light: #EEEDFE;
+  --text-main: #2D2640;
+  --text-sub: #6E6680;
+  --text-faint: #A39CB0;
+  --border: #E7E1D8;
+  --bg-page: #FBF7F0;
+  --shadow-card: 0 2px 10px rgba(45, 38, 64, 0.06);
+  --shadow-hover: 0 8px 24px rgba(45, 38, 64, 0.12);
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--text-main);
+  font-family: 'Zen Kaku Gothic New', 'Hiragino Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.serif {
+  font-family: 'Shippori Mincho B1', serif;
+}
+
+/* ---------- レイアウト ---------- */
+
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg-page);
+  position: relative;
+  padding-bottom: 76px; /* タブバー分 */
+}
+
+.page-content {
+  padding: 16px;
+}
+
+/* ---------- ヘッダー ---------- */
+
+.top-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(251, 247, 240, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 16px;
+}
+
+.top-header .brand {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.top-header .brand-sub {
+  font-size: 10px;
+  color: var(--coral);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 2px;
+}
+
+.top-header .tagline {
+  font-size: 11.5px;
+  color: var(--text-sub);
+  margin: 0;
+}
+
+.subpage-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(251, 247, 240, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subpage-header .back-btn {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-sub);
+  flex-shrink: 0;
+}
+.subpage-header .back-btn:hover { background: rgba(45,38,64,0.06); }
+
+.subpage-header .title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  flex: 1;
+}
+
+/* ---------- アイコン（インラインSVG用） ---------- */
+
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.15em;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- 検索・カテゴリ ---------- */
+
+.search-box {
+  position: relative;
+  margin-bottom: 12px;
+}
+.search-box input {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  outline: none;
+}
+.search-box input:focus { border-color: var(--coral); }
+.search-box .icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-faint);
+  font-size: 16px;
+}
+
+.cat-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.cat-row::-webkit-scrollbar { display: none; }
+
+.cat-pill {
+  white-space: nowrap;
+  font-size: 12.5px;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  color: var(--text-sub);
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.cat-pill.active {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #fff;
+}
+
+/* ---------- 夢追い人カード ---------- */
+
+.creator-card {
+  display: block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 14px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.creator-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.creator-card .cover {
+  position: relative;
+  height: 130px;
+  background: var(--border);
+}
+.creator-card .cover img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.creator-card .cover::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(26,21,48,0) 45%, rgba(26,21,48,0.75) 100%);
+}
+.creator-card .cover-info {
+  position: absolute; left: 12px; bottom: 10px;
+  display: flex; align-items: center; gap: 9px;
+  z-index: 1;
+}
+.creator-card .cover-info img {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid #fff; object-fit: cover;
+}
+.creator-card .cover-info .name { color: #fff; font-size: 13.5px; font-weight: 700; margin: 0; }
+.creator-card .cover-info .title { color: rgba(255,255,255,0.85); font-size: 11px; margin: 0; }
+
+.creator-card .quote {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--text-sub);
+  margin: 0;
+  padding: 12px 14px;
+  line-height: 1.7;
+}
+
+/* ---------- ボタン ---------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  font-size: 14.5px;
+  font-weight: 700;
+  transition: filter 0.15s, transform 0.1s;
+}
+.btn:active { transform: scale(0.98); }
+
+.btn-coral { background: var(--coral); color: #fff; }
+.btn-coral:hover { filter: brightness(1.06); }
+
+.btn-purple { background: var(--purple); color: #fff; }
+.btn-purple:hover { filter: brightness(1.06); }
+
+.btn-outline-purple {
+  background: var(--paper);
+  color: var(--purple);
+  border: 1.5px solid var(--purple-light);
+}
+.btn-outline-purple:hover { background: var(--purple-light); }
+
+.btn-outline-coral {
+  background: var(--paper);
+  color: var(--coral);
+  border: 1.5px solid var(--coral);
+}
+
+.btn-ghost {
+  background: var(--paper);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--cream); }
+
+.btn-block { width: 100%; }
+
+.btn-disabled {
+  background: var(--border);
+  color: var(--text-faint);
+  pointer-events: none;
+}
+
+/* ---------- カード共通 ---------- */
+
+.card {
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.card-pad { padding: 18px; }
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ---------- タブバー ---------- */
+
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: rgba(255, 248, 240, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 30;
+}
+.tab-bar a {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 0 12px;
+  color: var(--text-faint);
+  font-size: 10.5px;
+}
+.tab-bar a.active { color: var(--coral); }
+.tab-bar a .icon { font-size: 21px; }
+
+/* ---------- バッジ・タグ ---------- */
+
+.tag {
+  display: inline-block;
+  font-size: 11.5px;
+  padding: 3px 11px;
+  border-radius: var(--radius-md);
+  margin-right: 6px;
+}
+.tag-coral { background: var(--coral-light); color: var(--coral-dark); }
+.tag-amber { background: var(--amber-light); color: #7A4D0F; }
+.tag-purple { background: var(--purple-light); color: var(--purple-dark); }
+
+.vip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-md);
+  background: var(--purple-light);
+  color: var(--purple-dark);
+  font-weight: 700;
+}
+
+/* ---------- フォーム ---------- */
+
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-faint);
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="password"],
+.field input[type="number"],
+.field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  outline: none;
+  resize: vertical;
+}
+.field input:focus, .field textarea:focus { border-color: var(--coral); }
+.field .serif-input { font-family: 'Shippori Mincho B1', serif; font-style: italic; }
+
+/* トグルスイッチ */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle .track {
+  position: absolute; inset: 0;
+  background: var(--border);
+  border-radius: var(--radius-pill);
+  transition: background 0.15s;
+}
+.toggle .knob {
+  position: absolute; left: 3px; top: 3px;
+  width: 18px; height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .track { background: var(--purple); }
+.toggle input:checked + .track + .knob { transform: translateX(18px); }
+
+/* ---------- 投稿カード ---------- */
+
+.post {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.post:last-child { border-bottom: none; }
+
+.post .post-head {
+  display: flex; align-items: center; gap: 9px; margin-bottom: 10px;
+}
+.post .post-head img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.post .post-head .name { font-size: 13.5px; font-weight: 700; margin: 0; }
+.post .post-head .time { font-size: 11px; color: var(--text-faint); margin: 0; }
+
+.post .post-text { font-size: 13.5px; line-height: 1.75; margin: 0 0 11px; }
+.post .post-image { border-radius: var(--radius-md); margin-bottom: 11px; width: 100%; }
+
+.post .post-actions { display: flex; align-items: center; gap: 18px; }
+.like-btn {
+  background: none; border: none; padding: 0;
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12.5px; color: var(--text-sub);
+}
+.like-btn.liked { color: var(--coral); }
+.like-btn .icon { font-size: 17px; }
+.like-btn.liked .icon { fill: var(--coral); }
+
+.comment-link {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12.5px; color: var(--text-faint);
+  background: none; border: none; padding: 0;
+}
+
+/* ---------- 空状態 ---------- */
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-faint);
+}
+.empty-state .icon { font-size: 32px; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+.empty-state p { font-size: 13px; margin: 0; }
+
+/* ---------- スクロールバー（チャット等） ---------- */
+
+.scroll-area { overflow-y: auto; scrollbar-width: thin; }
+
+/* ---------- ユーティリティ ---------- */
+
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-8 { gap: 8px; }
+.gap-10 { gap: 10px; }
+.gap-12 { gap: 12px; }
+.mt-0 { margin-top: 0; }
+.mb-0 { margin-bottom: 0; }
+.text-sub { color: var(--text-sub); }
+.text-faint { color: var(--text-faint); }
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+
+/* ---------- 収益・口座管理 ---------- */
+
+.earn-summary {
+  background: var(--navy);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.earn-summary .label {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 4px;
+}
+.earn-summary .amount {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+.earn-summary .sub-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.fee-note {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-faint);
+  background: var(--cream);
+  border-radius: var(--radius-md);
+  padding: 10px 13px;
+  margin-bottom: 18px;
+}
+
+.payout-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+}
+.payout-status.registered { background: var(--coral-light); }
+.payout-status.unregistered { background: var(--amber-light); }
+.payout-status .ps-text { font-size: 13px; font-weight: 700; }
+.payout-status.registered .ps-text { color: var(--coral-dark); }
+.payout-status.unregistered .ps-text { color: #7A4D0F; }
+.payout-status .ps-sub { font-size: 11px; color: var(--text-faint); margin: 2px 0 0; font-weight: 400; }
+
+.earn-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+}
+.earn-row:last-child { border-bottom: none; }
+.earn-row .sname { font-size: 13px; margin: 0; }
+.earn-row .sdate { font-size: 11px; color: var(--text-faint); margin: 1px 0 0; }
+.earn-row .amounts { text-align: right; }
+.earn-row .gross { font-size: 11px; color: var(--text-faint); margin: 0; text-decoration: line-through; }
+.earn-row .net { font-size: 13.5px; font-weight: 700; margin: 1px 0 0; color: var(--coral-dark); }
+
+/* ---------- 夢追い人ログイン ---------- */
+
+.creator-login-hero {
+  background: var(--navy);
+  color: #fff;
+  padding: 44px 24px 36px;
+  text-align: center;
+}
+.creator-login-hero .serif {
+  font-size: 21px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #fff;
+}
+.creator-login-hero p.sub {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.75);
+  margin: 0;
+  line-height: 1.8;
+}
+
+/* ---------- 都道府県絞り込み ---------- */
+
+.pref-select-row {
+  margin-bottom: 12px;
+}
+.pref-select-row select {
+  width: 100%;
+  padding: 9px 13px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--paper);
+  color: var(--text-main);
+  font-size: 13px;
+  outline: none;
+}
+.pref-select-row select:focus { border-color: var(--coral); }
+
+.pref-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-faint);
+}
+
+/* ---------- 月間応援ランキング（トップ画面） ---------- */
+
+.monthly-ranking {
+  margin-bottom: 18px;
+}
+.monthly-ranking-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.monthly-ranking-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.monthly-ranking-scroll::-webkit-scrollbar { display: none; }
+
+.ranking-chip {
+  flex-shrink: 0;
+  width: 78px;
+  text-align: center;
+  position: relative;
+}
+.ranking-chip .rank-badge {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.ranking-chip.rank-1 .rank-badge { background: var(--amber); }
+.ranking-chip.rank-2 .rank-badge { background: #B0A8C4; }
+.ranking-chip.rank-3 .rank-badge { background: #C58A4F; }
+
+.ranking-chip img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 6px;
+  border: 2px solid var(--paper);
+  box-shadow: var(--shadow-card);
+}
+.ranking-chip .rc-name {
+  font-size: 10.5px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- VIP人数表示（プロフィール） ---------- */
+
+.vip-count-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--purple-dark);
+  background: var(--purple-light);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin-bottom: 14px;
+  width: fit-content;
+}
+
+@media (max-width: 420px) {
+  .page-content { padding: 14px; }
+}
