@@ -1,23 +1,54 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { CREATORS } from "../../data/creators";
+import { useAuth } from "../../AuthContext";
 
 const PRESET_AMOUNTS = [300, 1000, 3000, 5000, 10000];
+
+// このページ専用の一時保存キー（夢追い人ごとに分ける）
+function storageKey(id) {
+  return `blossom_pending_support_${id}`;
+}
 
 export default function SupportPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
   const c = CREATORS[id];
+  const { user } = useAuth();
 
   const [selected, setSelected] = useState(null);
   const [customAmount, setCustomAmount] = useState("");
   const [showCustomInput, setShowCustomInput] = useState(false);
   const [message, setMessage] = useState("");
   const [completed, setCompleted] = useState(false);
+
+  // ページが開かれた時、sessionStorageに「ログイン前に入力していた内容」が
+  // 残っていれば、それを読み込んで画面に復元する
+  useEffect(() => {
+    if (!id) return;
+    try {
+      const saved = sessionStorage.getItem(storageKey(id));
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.selected) {
+          setSelected(data.selected);
+          if (!PRESET_AMOUNTS.includes(Number(data.selected))) {
+            setShowCustomInput(true);
+            setCustomAmount(String(data.selected));
+          }
+        }
+        if (data.message) setMessage(data.message);
+        // 一度復元したら、保存データは消しておく（再訪問時に古い内容が残らないように）
+        sessionStorage.removeItem(storageKey(id));
+      }
+    } catch (e) {
+      // sessionStorageが使えない環境等は無視する
+    }
+  }, [id]);
 
   if (!c) {
     return (
@@ -52,6 +83,21 @@ export default function SupportPage() {
 
   function handleConfirm() {
     if (!selected || Number(selected) <= 0) return;
+
+    if (!user) {
+      // 未ログインの場合：入力内容を一時保存してからログイン画面へ誘導する
+      try {
+        sessionStorage.setItem(
+          storageKey(id),
+          JSON.stringify({ selected, message })
+        );
+      } catch (e) {
+        // 保存に失敗しても致命的ではないため、そのまま進める
+      }
+      router.push(`/start?redirect=${encodeURIComponent(`/support/${id}`)}`);
+      return;
+    }
+
     setCompleted(true);
   }
 
@@ -60,12 +106,9 @@ export default function SupportPage() {
   return (
     <div className="app-shell">
       <div className="subpage-header">
-        <button
-          className="back-btn"
-          onClick={() => router.push(`/profile/${id}`)}
-        >
+        <Link className="back-btn" href={`/profile/${id}`}>
           ←
-        </button>
+        </Link>
         <span className="title">{completed ? "応援完了" : "応援する"}</span>
       </div>
 

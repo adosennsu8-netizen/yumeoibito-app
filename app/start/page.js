@@ -1,9 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function StartPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  // 例：/start?redirect=/support/mizuno のように、
+  // ログイン完了後に戻るべき場所を引き継ぐ
+  const redirect = searchParams.get("redirect") || "/";
+
+  function goSignup() {
+    router.push(`/signup?redirect=${encodeURIComponent(redirect)}`);
+  }
+
+  function goCreatorSignup() {
+    router.push("/creator-signup");
+  }
 
   return (
     <div className="app-shell">
@@ -25,7 +37,7 @@ export default function StartPage() {
         </div>
 
         <button
-          onClick={() => router.push("/signup")}
+          onClick={goSignup}
           style={{
             display: "block",
             width: "100%",
@@ -64,7 +76,7 @@ export default function StartPage() {
         </button>
 
         <button
-          onClick={() => router.push("/creator-signup")}
+          onClick={goCreatorSignup}
           style={{
             display: "block",
             width: "100%",

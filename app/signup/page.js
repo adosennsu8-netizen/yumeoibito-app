@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "../AuthContext";
 
 export default function SignupPage() {
@@ -9,6 +9,8 @@ export default function SignupPage() {
   const [step, setStep] = useState("choice");
   const { login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
 
   function handleOAuthLogin() {
     login();
@@ -22,6 +24,10 @@ export default function SignupPage() {
 
   function handleBack() {
     setStep("choice");
+  }
+
+  function goToDestination() {
+    router.push(redirect);
   }
 
   const headerTitle =
@@ -167,8 +173,8 @@ export default function SignupPage() {
           <p className="text-sub" style={{ fontSize: "13.5px", margin: "0 0 26px", lineHeight: 1.8 }}>
             これで応援やVIPチャットが利用できます
           </p>
-          <button onClick={() => router.push("/")} className="btn btn-coral btn-block">
-            夢追い人を探しに行く
+          <button onClick={goToDestination} className="btn btn-coral btn-block">
+            {redirect === "/" ? "夢追い人を探しに行く" : "もとの画面に戻る"}
           </button>
         </div>
       )}
