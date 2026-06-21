@@ -50,30 +50,13 @@ export default function HomePage() {
 
   return (
     <div className="app-shell">
-      {/* ===== ロゴサイズ確認用：3パターン並べて表示（あとで1つに絞ります） ===== */}
-      <div style={{ background: "#fff", padding: "16px 0", borderBottom: "2px dashed #ccc" }}>
-        <p style={{ textAlign: "center", fontSize: 11, color: "#999", marginBottom: 12 }}>
-          ↓ ロゴサイズ確認用（上から140px / 170px / 200px）
-        </p>
-        <div style={{ textAlign: "center", marginBottom: 14 }}>
-          <Image src="/logo.png" alt="140px" width={200} height={57} style={{ width: 140, height: "auto", margin: "0 auto" }} />
-        </div>
-        <div style={{ textAlign: "center", marginBottom: 14 }}>
-          <Image src="/logo.png" alt="170px" width={200} height={57} style={{ width: 170, height: "auto", margin: "0 auto" }} />
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <Image src="/logo.png" alt="200px" width={200} height={57} style={{ width: 200, height: "auto", margin: "0 auto" }} />
-        </div>
-      </div>
-      {/* ===== ここまで確認用 ===== */}
-
       <header className="top-header" style={{ textAlign: "center" }}>
         <Image
           src="/logo.png"
           alt="BLOSSOM"
-          width={200}
-          height={57}
-          style={{ width: 140, height: "auto", margin: "0 auto" }}
+          width={1717}
+          height={916}
+          style={{ width: 280, height: "auto", margin: "0 auto" }}
           priority
         />
       </header>
