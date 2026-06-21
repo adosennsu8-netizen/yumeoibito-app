@@ -1,8 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function StartPage() {
+function StartContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   // 例：/start?redirect=/support/mizuno のように、
@@ -114,5 +115,13 @@ export default function StartPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function StartPage() {
+  return (
+    <Suspense fallback={null}>
+      <StartContent />
+    </Suspense>
   );
 }
