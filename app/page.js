@@ -17,7 +17,6 @@ export default function HomePage() {
   const categories = ["all", "art", "music", "sports", "biz"];
   const top10 = getMonthlyRankingTop10();
 
-  // 並び替え＋絞り込みを適用した全件リスト
   const sortedFiltered = useMemo(() => {
     const sorted = getSortedCreators(sortBy);
     return sorted.filter((c) => {
@@ -27,12 +26,10 @@ export default function HomePage() {
     });
   }, [sortBy, activeCat, activePref]);
 
-  // 絞り込み条件が変わったら、表示件数を最初のページ分にリセットする
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [sortBy, activeCat, activePref]);
 
-  // 画面下の「読み込み位置」が見えたら、次の20人を追加表示する
   useEffect(() => {
     const el = loadMoreRef.current;
     if (!el) return;
@@ -53,6 +50,23 @@ export default function HomePage() {
 
   return (
     <div className="app-shell">
+      {/* ===== ロゴサイズ確認用：3パターン並べて表示（あとで1つに絞ります） ===== */}
+      <div style={{ background: "#fff", padding: "16px 0", borderBottom: "2px dashed #ccc" }}>
+        <p style={{ textAlign: "center", fontSize: 11, color: "#999", marginBottom: 12 }}>
+          ↓ ロゴサイズ確認用（上から140px / 170px / 200px）
+        </p>
+        <div style={{ textAlign: "center", marginBottom: 14 }}>
+          <Image src="/logo.png" alt="140px" width={200} height={57} style={{ width: 140, height: "auto", margin: "0 auto" }} />
+        </div>
+        <div style={{ textAlign: "center", marginBottom: 14 }}>
+          <Image src="/logo.png" alt="170px" width={200} height={57} style={{ width: 170, height: "auto", margin: "0 auto" }} />
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <Image src="/logo.png" alt="200px" width={200} height={57} style={{ width: 200, height: "auto", margin: "0 auto" }} />
+        </div>
+      </div>
+      {/* ===== ここまで確認用 ===== */}
+
       <header className="top-header" style={{ textAlign: "center" }}>
         <Image
           src="/logo.png"
