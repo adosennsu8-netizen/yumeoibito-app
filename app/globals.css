@@ -75,11 +75,7 @@ input, textarea, select {
 /* ---------- ヘッダー ---------- */
 
 .top-header {
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(251, 247, 240, 0.92);
-  backdrop-filter: blur(8px);
+  background: var(--bg-page);
   border-bottom: 1px solid var(--border);
   padding: 14px 16px;
 }
