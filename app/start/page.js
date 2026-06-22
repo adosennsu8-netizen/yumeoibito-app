@@ -3,12 +3,19 @@
 import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+function getAnnouncement(redirect) {
+  if (!redirect || redirect === "/") return null;
+  if (redirect.startsWith("/support/")) return "応援するにはアカウント登録が必要です";
+  if (redirect.startsWith("/vip/")) return "VIPチャットを利用するにはアカウント登録が必要です";
+  if (redirect.startsWith("/mypage")) return "マイページを見るにはアカウント登録が必要です";
+  return "続けるにはアカウント登録が必要です";
+}
+
 function StartContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  // 例：/start?redirect=/support/mizuno のように、
-  // ログイン完了後に戻るべき場所を引き継ぐ
   const redirect = searchParams.get("redirect") || "/";
+  const announcement = getAnnouncement(redirect);
 
   function goSignup() {
     router.push(`/signup?redirect=${encodeURIComponent(redirect)}`);
@@ -21,14 +28,35 @@ function StartContent() {
   return (
     <div className="app-shell">
       <div className="subpage-header">
-        <button className="back-btn" onClick={() => router.push("/")}>
+        <button className="back-btn" onClick={() => router.back()}>
           ←
         </button>
         <span className="title">はじめる</span>
       </div>
 
       <div style={{ padding: "36px 22px 24px" }}>
-        <div style={{ textAlign: "center", marginBottom: 34 }}>
+        {announcement && (
+          <div
+            style={{
+              background: "var(--coral-light)",
+              borderRadius: "var(--radius-md)",
+              padding: "13px 16px",
+              marginBottom: 24,
+              display: "flex",
+              alignItems: "center",
+              gap: 9,
+              fontSize: 13,
+              color: "var(--coral-dark)",
+              fontWeight: 700,
+              lineHeight: 1.6,
+            }}
+          >
+            <span style={{ fontSize: 18, flexShrink: 0 }}>🔒</span>
+            <span>{announcement}</span>
+          </div>
+        )}
+
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
           <p className="serif" style={{ fontSize: 20, fontWeight: 700, margin: "0 0 8px" }}>
             どちらで始めますか？
           </p>
