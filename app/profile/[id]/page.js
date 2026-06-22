@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { CREATORS } from "../../data/creators";
+import { useAuth } from "../../AuthContext";
 
 export default function ProfilePage() {
   const params = useParams();
+  const router = useRouter();
   const id = params.id;
   const c = CREATORS[id];
+  const { user, toggleFavorite, isFavorite } = useAuth();
 
   if (!c) {
     return (
@@ -21,15 +25,20 @@ export default function ProfilePage() {
     );
   }
 
+  function handleFavorite() {
+    if (!user) {
+      router.push(`/start?redirect=/profile/${id}`);
+      return;
+    }
+    toggleFavorite(id);
+  }
+
+  const favorited = isFavorite(id);
+
   return (
     <div className="app-shell">
       <div
-        className="profile-cover"
-        style={{
-          position: "relative",
-          height: 220,
-          background: "var(--border)",
-        }}
+        style={{ position: "relative", height: 220, background: "var(--border)" }}
       >
         <img
           src={c.cover}
@@ -40,8 +49,7 @@ export default function ProfilePage() {
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(180deg, rgba(26,21,48,0) 40%, rgba(26,21,48,0.78) 100%)",
+            background: "linear-gradient(180deg, rgba(26,21,48,0) 40%, rgba(26,21,48,0.78) 100%)",
           }}
         />
         <Link
@@ -64,6 +72,31 @@ export default function ProfilePage() {
         >
           ←
         </Link>
+
+        {/* お気に入りボタン（右上） */}
+        <button
+          onClick={handleFavorite}
+          style={{
+            position: "absolute",
+            top: 14,
+            right: 14,
+            zIndex: 2,
+            background: favorited ? "var(--coral)" : "rgba(255,255,255,0.85)",
+            color: favorited ? "#fff" : "var(--coral)",
+            width: 38,
+            height: 38,
+            borderRadius: "50%",
+            border: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 18,
+            boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+          }}
+        >
+          {favorited ? "♥" : "♡"}
+        </button>
+
         <div
           style={{
             position: "absolute",
@@ -93,16 +126,7 @@ export default function ProfilePage() {
             <p style={{ color: "rgba(255,255,255,0.88)", fontSize: 13, margin: "3px 0 0" }}>
               {c.title}
             </p>
-            <p
-              style={{
-                color: "rgba(255,255,255,0.88)",
-                fontSize: 13,
-                margin: "3px 0 0",
-                display: "flex",
-                alignItems: "center",
-                gap: 4,
-              }}
-            >
+            <p style={{ color: "rgba(255,255,255,0.88)", fontSize: 13, margin: "3px 0 0", display: "flex", alignItems: "center", gap: 4 }}>
               📍{c.prefecture}
             </p>
           </div>
@@ -118,10 +142,7 @@ export default function ProfilePage() {
           ))}
         </div>
 
-        <p
-          className="serif"
-          style={{ fontSize: 17, lineHeight: 1.85, margin: "14px 0 16px" }}
-        >
+        <p className="serif" style={{ fontSize: 17, lineHeight: 1.85, margin: "14px 0 16px" }}>
           「{c.quote}」
         </p>
         <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-sub)", margin: "0 0 18px" }}>
@@ -171,6 +192,14 @@ export default function ProfilePage() {
             👑 VIPで話す
           </Link>
         </div>
+
+        <button
+          onClick={handleFavorite}
+          className={favorited ? "btn btn-coral btn-block" : "btn btn-ghost btn-block"}
+          style={{ marginTop: 10 }}
+        >
+          {favorited ? "♥ お気に入り済み" : "♡ お気に入りに追加"}
+        </button>
       </div>
     </div>
   );

@@ -3,16 +3,20 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { CATEGORY_LABELS, PREFECTURES, getMonthlyRankingTop10, getSortedCreators } from "./data/creators";
+import { useAuth } from "./AuthContext";
 
 const PAGE_SIZE = 20;
 
 export default function HomePage() {
   const [activeCat, setActiveCat] = useState("all");
   const [activePref, setActivePref] = useState("all");
-  const [sortBy, setSortBy] = useState("new"); // "new" | "popular"
+  const [sortBy, setSortBy] = useState("new");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loadMoreRef = useRef(null);
+  const { user, toggleFavorite, isFavorite } = useAuth();
+  const router = useRouter();
 
   const categories = ["all", "art", "music", "sports", "biz"];
   const top10 = getMonthlyRankingTop10();
@@ -48,6 +52,16 @@ export default function HomePage() {
   const visibleCreators = sortedFiltered.slice(0, visibleCount);
   const hasMore = visibleCount < sortedFiltered.length;
 
+  function handleFavorite(e, creatorId) {
+    e.preventDefault(); // カードへの遷移を止める
+    e.stopPropagation();
+    if (!user) {
+      router.push(`/start?redirect=/`);
+      return;
+    }
+    toggleFavorite(creatorId);
+  }
+
   return (
     <div className="app-shell">
       <header className="top-header" style={{ textAlign: "center" }}>
@@ -81,38 +95,16 @@ export default function HomePage() {
                 >
                   <span
                     className="rank-badge"
-                    style={
-                      isFirst
-                        ? {
-                            width: 22,
-                            height: 22,
-                            fontSize: 12,
-                            background: "var(--amber)",
-                            boxShadow: "0 0 0 2px var(--paper)",
-                          }
-                        : undefined
-                    }
+                    style={isFirst ? { width: 22, height: 22, fontSize: 12, background: "var(--amber)", boxShadow: "0 0 0 2px var(--paper)" } : undefined}
                   >
                     {i + 1}
                   </span>
                   <img
                     src={c.avatar}
                     alt=""
-                    style={
-                      isFirst
-                        ? {
-                            width: 72,
-                            height: 72,
-                            border: "3px solid var(--amber)",
-                            boxShadow: "0 0 0 2px var(--paper), 0 4px 10px rgba(232,146,58,0.35)",
-                          }
-                        : undefined
-                    }
+                    style={isFirst ? { width: 72, height: 72, border: "3px solid var(--amber)", boxShadow: "0 0 0 2px var(--paper), 0 4px 10px rgba(232,146,58,0.35)" } : undefined}
                   />
-                  <p
-                    className="rc-name"
-                    style={isFirst ? { fontWeight: 700, fontSize: 11.5, color: "var(--text-main)" } : undefined}
-                  >
+                  <p className="rc-name" style={isFirst ? { fontWeight: 700, fontSize: 11.5, color: "var(--text-main)" } : undefined}>
                     {c.name}
                   </p>
                 </Link>
@@ -171,7 +163,28 @@ export default function HomePage() {
             </div>
           ) : (
             visibleCreators.map((c) => (
-              <Link key={c.id} className="creator-card" href={`/profile/${c.id}`}>
+              <Link key={c.id} className="creator-card" href={`/profile/${c.id}`} style={{ position: "relative" }}>
+                <button
+                  onClick={(e) => handleFavorite(e, c.id)}
+                  style={{
+                    position: "absolute",
+                    top: 10,
+                    right: 10,
+                    zIndex: 2,
+                    background: isFavorite(c.id) ? "var(--coral)" : "rgba(255,255,255,0.85)",
+                    border: "none",
+                    borderRadius: "50%",
+                    width: 34,
+                    height: 34,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 16,
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
+                  }}
+                >
+                  {isFavorite(c.id) ? "♥" : "♡"}
+                </button>
                 <div className="cover">
                   <img src={c.cover} alt="" />
                   <div className="cover-info">

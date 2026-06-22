@@ -5,7 +5,7 @@ import { CREATORS } from "../data/creators";
 import { useAuth } from "../AuthContext";
 
 export default function MyPage() {
-  const { user } = useAuth();
+  const { user, favorites, toggleFavorite } = useAuth();
 
   if (!user) {
     return (
@@ -46,6 +46,10 @@ export default function MyPage() {
     );
   }
 
+  const favoriteCreators = favorites
+    .map((id) => CREATORS[id])
+    .filter(Boolean);
+
   return (
     <div className="app-shell">
       <div style={{ display: "flex", alignItems: "center", gap: 13, padding: 18, background: "var(--paper)", borderBottom: "1px solid var(--border)" }}>
@@ -62,7 +66,7 @@ export default function MyPage() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, padding: "16px 16px 0" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, padding: "16px 16px 0" }}>
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "13px 15px" }}>
           <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>応援した人数</p>
           <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{user.supportHistory.length}人</p>
@@ -71,9 +75,59 @@ export default function MyPage() {
           <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>VIP加入中</p>
           <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{user.vip.length}人</p>
         </div>
+        <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "13px 15px" }}>
+          <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>お気に入り</p>
+          <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{favorites.length}人</p>
+        </div>
       </div>
 
       <div className="page-content">
+
+        {/* お気に入り一覧 */}
+        <div className="card card-pad" style={{ marginTop: 16 }}>
+          <p className="section-title">♥ お気に入り</p>
+          {favoriteCreators.length === 0 ? (
+            <p className="text-faint" style={{ fontSize: 13 }}>
+              まだお気に入りに追加した夢追い人がいません
+            </p>
+          ) : (
+            favoriteCreators.map((c) => (
+              <div
+                key={c.id}
+                style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 0", borderBottom: "1px solid var(--border)" }}
+              >
+                <Link href={`/profile/${c.id}`} style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
+                  <img
+                    src={c.avatar}
+                    alt=""
+                    style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
+                  />
+                  <div>
+                    <p style={{ fontSize: "13.5px", margin: 0 }}>{c.name}　{c.age}歳</p>
+                    <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>
+                      {c.title}　・　{c.prefecture}
+                    </p>
+                  </div>
+                </Link>
+                <button
+                  onClick={() => toggleFavorite(c.id)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "var(--coral)",
+                    fontSize: 20,
+                    padding: "4px 8px",
+                    flexShrink: 0,
+                  }}
+                >
+                  ♥
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* VIP加入中 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">👑 VIP加入中</p>
           {user.vip.length === 0 ? (
@@ -110,6 +164,7 @@ export default function MyPage() {
           )}
         </div>
 
+        {/* 応援履歴 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">❤️ 応援履歴</p>
           {user.supportHistory.length === 0 ? (
