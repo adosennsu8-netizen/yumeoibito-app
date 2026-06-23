@@ -32,7 +32,6 @@ export default function CreatorProfileEditPage() {
           }}
         >
           <img
-            {/* カバー画像は未設定 */}
             src=""
             alt=""
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
