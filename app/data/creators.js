@@ -22,3 +22,16 @@ export const CREATOR_POSTS = {
     { id: "n3", date: "2026年5月25日", text: "今月3回目の山行。雨の中でしたが視界が開けた瞬間の景色が最高でした。山は何度来ても飽きません。", isVip: false },
   ],
 };
+export function getSortedCreators(sortKey) {
+  const list = Object.values(CREATORS);
+  if (sortKey === "monthly") {
+    return list.sort((a, b) => b.monthlySupportCount - a.monthlySupportCount);
+  }
+  return list;
+}
+
+export function getMonthlyRankingTop10() {
+  return Object.values(CREATORS)
+    .sort((a, b) => b.monthlySupportCount - a.monthlySupportCount)
+    .slice(0, 10);
+}
