@@ -45,7 +45,7 @@ export default function FeedPage() {
   return (
     <div className="app-shell">
       <header className="top-header">
-        <p className="brand">夢のタイムライン</p>
+        <p className="brand">タイムライン</p>
         <p className="tagline">応援している彼たちの、いまの一歩</p>
       </header>
 

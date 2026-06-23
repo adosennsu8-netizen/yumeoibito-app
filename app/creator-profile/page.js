@@ -32,7 +32,7 @@ export default function CreatorProfileEditPage() {
           }}
         >
           <img
-            src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop"
+            {/* カバー画像は未設定 */}
             alt=""
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
@@ -59,7 +59,7 @@ export default function CreatorProfileEditPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 20 }}>
           <div style={{ position: "relative", flexShrink: 0 }}>
             <img
-              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces"
+              src="/logo.png"
               alt=""
               style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover" }}
             />
@@ -86,24 +86,24 @@ export default function CreatorProfileEditPage() {
           </div>
           <div className="field" style={{ flex: 1, marginBottom: 0 }}>
             <label>表示名</label>
-            <input type="text" defaultValue="水野 蒼" />
+            <input type="text" defaultValue="" placeholder="例：山田 太郎" />
           </div>
         </div>
 
         <div className="field">
           <label>年齢</label>
-          <input type="number" defaultValue={28} min={18} max={99} style={{ maxWidth: 120 }} />
+          <input type="number" defaultValue="" placeholder="28" min={18} max={99} style={{ maxWidth: 120 }} />
         </div>
 
         <div className="field">
           <label>肩書き・夢のひとこと</label>
-          <input type="text" defaultValue="陶芸家を目指して 5年目" />
+          <input type="text" defaultValue="" placeholder="例：陶芸家を目指して 5年目" />
         </div>
 
         <div className="field">
           <label>活動拠点の都道府県</label>
           <select
-            defaultValue="東京都"
+            defaultValue=""
             style={{
               width: "100%",
               padding: "11px 13px",
@@ -124,7 +124,7 @@ export default function CreatorProfileEditPage() {
           <textarea
             rows={3}
             className="serif-input"
-            defaultValue="割れても、もう一度焼く。土も自分も、何度でもやり直せると思ってます。"
+            defaultValue="" placeholder="あなたの夢を一言で表すと？"
           />
         </div>
 
@@ -132,7 +132,7 @@ export default function CreatorProfileEditPage() {
           <label>自己紹介</label>
           <textarea
             rows={4}
-            defaultValue="会社員を辞めて陶芸の道へ。窯を借りるお金を貯めながら、来年春の個展開催を目標に作品を作り続けています。"
+            defaultValue="" placeholder="どんな夢を、どんな想いで追いかけているか教えてください"
           />
         </div>
 
