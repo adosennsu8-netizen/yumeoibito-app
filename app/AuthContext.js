@@ -13,14 +13,18 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [favorites, setFavorites] = useState([]); // お気に入りの夢追い人IDリスト
+  const [vipList, setVipList] = useState([]); // VIP加入リスト
 
   function login() {
-    setUser(CURRENT_USER);
+    const u = { ...CURRENT_USER };
+    setUser(u);
+    setVipList([...u.vip]); // VIPリストをstateに展開
   }
 
   function logout() {
     setUser(null);
     setFavorites([]);
+    setVipList([]);
   }
 
   function toggleFavorite(creatorId) {
@@ -35,8 +39,16 @@ export function AuthProvider({ children }) {
     return favorites.includes(creatorId);
   }
 
+  function isVip(creatorId) {
+    return vipList.some((v) => v.creatorId === creatorId);
+  }
+
+  function cancelVip(creatorId) {
+    setVipList((prev) => prev.filter((v) => v.creatorId !== creatorId));
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, favorites, toggleFavorite, isFavorite }}>
+    <AuthContext.Provider value={{ user, login, logout, favorites, toggleFavorite, isFavorite, vipList, isVip, cancelVip }}>
       {children}
     </AuthContext.Provider>
   );

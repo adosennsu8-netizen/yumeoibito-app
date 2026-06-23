@@ -5,7 +5,7 @@ import { CREATORS } from "../data/creators";
 import { useAuth } from "../AuthContext";
 
 export default function MyPage() {
-  const { user, favorites, toggleFavorite } = useAuth();
+  const { user, favorites, toggleFavorite, vipList } = useAuth();
 
   if (!user) {
     return (
@@ -73,7 +73,7 @@ export default function MyPage() {
         </div>
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "13px 15px" }}>
           <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>VIP加入中</p>
-          <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{user.vip.length}人</p>
+          <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{vipList.length}人</p>
         </div>
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "13px 15px" }}>
           <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>お気に入り</p>
@@ -130,16 +130,18 @@ export default function MyPage() {
         {/* VIP加入中 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">👑 VIP加入中</p>
-          {user.vip.length === 0 ? (
+          {vipList.length === 0 ? (
             <p className="text-faint" style={{ fontSize: 13 }}>まだVIP加入している夢追い人がいません</p>
           ) : (
-            user.vip.map((v) => {
+            vipList.map((v) => {
               const c = CREATORS[v.creatorId];
               return (
                 <div key={v.creatorId} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 0", borderBottom: "1px solid var(--border)" }}>
-                  <img src={c.avatar} alt="" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }} />
+                  <Link href={`/profile/${c.id}`}>
+                    <img src={c.avatar} alt="" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }} />
+                  </Link>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: "13.5px", margin: 0 }}>{c.name}</p>
+                    <Link href={`/profile/${c.id}`} style={{ fontSize: "13.5px", margin: 0, display: "block" }}>{c.name}</Link>
                     <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>
                       次回更新日 {v.nextBilling} ・ ¥{v.price}/月
                     </p>
@@ -174,9 +176,11 @@ export default function MyPage() {
               const c = CREATORS[s.creatorId];
               return (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 0", borderBottom: "1px solid var(--border)" }}>
-                  <img src={c.avatar} alt="" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }} />
+                  <Link href={`/profile/${c.id}`}>
+                    <img src={c.avatar} alt="" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }} />
+                  </Link>
                   <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: "13.5px", margin: 0 }}>{c.name}</p>
+                    <Link href={`/profile/${c.id}`} style={{ fontSize: "13.5px", margin: 0, display: "block" }}>{c.name}</Link>
                     <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>{s.date}</p>
                   </div>
                   <span style={{ color: "var(--coral)", fontSize: 14 }}>✓</span>

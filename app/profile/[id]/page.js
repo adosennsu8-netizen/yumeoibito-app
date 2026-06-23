@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { CREATORS } from "../../data/creators";
+import { CREATORS, CREATOR_POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 
 export default function ProfilePage() {
@@ -11,7 +11,10 @@ export default function ProfilePage() {
   const router = useRouter();
   const id = params.id;
   const c = CREATORS[id];
-  const { user, toggleFavorite, isFavorite } = useAuth();
+  const { user, toggleFavorite, isFavorite, isVip } = useAuth();
+  const favorited = isFavorite(id);
+  const vipMember = isVip ? isVip(id) : false;
+  const posts = CREATOR_POSTS[id] || [];
 
   if (!c) {
     return (
@@ -33,13 +36,9 @@ export default function ProfilePage() {
     toggleFavorite(id);
   }
 
-  const favorited = isFavorite(id);
-
   return (
     <div className="app-shell">
-      <div
-        style={{ position: "relative", height: 220, background: "var(--border)" }}
-      >
+      <div style={{ position: "relative", height: 220, background: "var(--border)" }}>
         <img
           src={c.cover}
           alt=""
@@ -73,7 +72,6 @@ export default function ProfilePage() {
           ←
         </Link>
 
-        {/* お気に入りボタン（右上） */}
         <button
           onClick={handleFavorite}
           style={{
@@ -200,6 +198,49 @@ export default function ProfilePage() {
         >
           {favorited ? "♥ お気に入り済み" : "♡ お気に入りに追加"}
         </button>
+
+        {/* タイムライン */}
+        <div style={{ marginTop: 22 }}>
+          <p className="section-title">📝 最近の投稿</p>
+          {posts.length === 0 ? (
+            <p className="text-faint" style={{ fontSize: 13 }}>まだ投稿がありません</p>
+          ) : (
+            posts.map((post) => {
+              const locked = post.isVip && !vipMember;
+              return (
+                <div
+                  key={post.id}
+                  className="card card-pad"
+                  style={{ marginBottom: 12 }}
+                >
+                  <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "0 0 7px", display: "flex", alignItems: "center", gap: 6 }}>
+                    {post.isVip && (
+                      <span style={{ background: "var(--purple-light)", color: "var(--purple)", padding: "1px 7px", borderRadius: "var(--radius-pill)", fontSize: 10, fontWeight: 700 }}>
+                        👑 VIP限定
+                      </span>
+                    )}
+                    {post.date}
+                  </p>
+                  {locked ? (
+                    <div style={{ textAlign: "center", padding: "10px 0 4px" }}>
+                      <p style={{ fontSize: 13, color: "var(--text-faint)", margin: "0 0 10px" }}>
+                        🔒 VIP会員限定の投稿です
+                      </p>
+                      <Link
+                        href={`/vip/${c.id}`}
+                        style={{ fontSize: 12, padding: "7px 18px", borderRadius: "var(--radius-md)", background: "var(--purple-light)", color: "var(--purple)", fontWeight: 700 }}
+                      >
+                        VIPに加入して読む
+                      </Link>
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: "13.5px", lineHeight: 1.8, margin: 0 }}>{post.text}</p>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
