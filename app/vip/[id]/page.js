@@ -3,15 +3,24 @@
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { CREATORS } from "../../data/creators";
+import { useAuth } from "../../AuthContext";
 
 export default function VipPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
   const c = CREATORS[id];
+  const { isVip, addVip } = useAuth();
 
-  const [subscribed, setSubscribed] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const alreadyVip = isVip ? isVip(id) : false;
+
+  const [subscribed, setSubscribed] = useState(alreadyVip);
+  const [messages, setMessages] = useState(
+    alreadyVip ? [{
+      from: "creator",
+      text: "VIP登録ありがとうございます！これからよろしくお願いします。今日はいい一日でしたか？",
+    }] : []
+  );
   const [chatInput, setChatInput] = useState("");
 
   if (!c) {
@@ -27,13 +36,12 @@ export default function VipPage() {
   }
 
   function handleSubscribe() {
+    addVip(id);
     setSubscribed(true);
-    setMessages([
-      {
-        from: "creator",
-        text: "VIP登録ありがとうございます！これからよろしくお願いします。今日はいい一日でしたか？",
-      },
-    ]);
+    setMessages([{
+      from: "creator",
+      text: "VIP登録ありがとうございます！これからよろしくお願いします。今日はいい一日でしたか？",
+    }]);
   }
 
   function handleSend() {
@@ -115,7 +123,6 @@ export default function VipPage() {
           </div>
 
           <div
-            className="note-box"
             style={{
               background: "var(--cream)",
               borderRadius: "var(--radius-md)",

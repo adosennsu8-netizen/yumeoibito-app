@@ -3,28 +3,26 @@
 import { createContext, useContext, useState } from "react";
 import { CURRENT_USER } from "./data/creators";
 
-/* ===========================================================
-   ログイン状態・お気に入りを管理する仕組み（ダミー版）
-   本番ではここをFirebase Authentication等に差し替える想定。
-=========================================================== */
-
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [favorites, setFavorites] = useState([]); // お気に入りの夢追い人IDリスト
-  const [vipList, setVipList] = useState([]); // VIP加入リスト
+  const [favorites, setFavorites] = useState([]);
+  const [vipList, setVipList] = useState([]);
+  const [supportHistory, setSupportHistory] = useState([]);
 
   function login() {
     const u = { ...CURRENT_USER };
     setUser(u);
-    setVipList([...u.vip]); // VIPリストをstateに展開
+    setVipList([...u.vip]);
+    setSupportHistory([...u.supportHistory]);
   }
 
   function logout() {
     setUser(null);
     setFavorites([]);
     setVipList([]);
+    setSupportHistory([]);
   }
 
   function toggleFavorite(creatorId) {
@@ -47,8 +45,33 @@ export function AuthProvider({ children }) {
     setVipList((prev) => prev.filter((v) => v.creatorId !== creatorId));
   }
 
+  function addVip(creatorId) {
+    if (!vipList.some((v) => v.creatorId === creatorId)) {
+      const today = new Date();
+      const next = new Date(today);
+      next.setMonth(next.getMonth() + 1);
+      const nextBilling = `${next.getFullYear()}年${next.getMonth() + 1}月${next.getDate()}日`;
+      setVipList((prev) => [...prev, { creatorId, nextBilling, price: 500 }]);
+    }
+  }
+
+  function addSupport(creatorId) {
+    const today = new Date();
+    const date = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
+    setSupportHistory((prev) => [{ creatorId, date }, ...prev]);
+  }
+
+  function isSupporting(creatorId) {
+    return supportHistory.some((s) => s.creatorId === creatorId);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, favorites, toggleFavorite, isFavorite, vipList, isVip, cancelVip }}>
+    <AuthContext.Provider value={{
+      user, login, logout,
+      favorites, toggleFavorite, isFavorite,
+      vipList, isVip, cancelVip, addVip,
+      supportHistory, addSupport, isSupporting,
+    }}>
       {children}
     </AuthContext.Provider>
   );
