@@ -18,7 +18,7 @@ export default function SupportPage() {
   const params = useParams();
   const id = params.id;
   const c = CREATORS[id];
-  const { user } = useAuth();
+  const { user, addSupport } = useAuth();
 
   const [selected, setSelected] = useState(null);
   const [customAmount, setCustomAmount] = useState("");
@@ -97,7 +97,7 @@ export default function SupportPage() {
       router.push(`/start?redirect=${encodeURIComponent(`/support/${id}`)}`);
       return;
     }
-
+    addSupport(id);
     setCompleted(true);
   }
 

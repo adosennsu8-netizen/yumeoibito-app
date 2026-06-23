@@ -7,7 +7,7 @@ import { CREATORS, POSTS } from "../data/creators";
 import { useAuth } from "../AuthContext";
 
 export default function FeedPage() {
-  const { user, supportHistory } = useAuth();
+  const { user, supportHistory, vipList } = useAuth();
   const router = useRouter();
   const [tab, setTab] = useState("all");
   const [likes, setLikes] = useState(
@@ -15,7 +15,10 @@ export default function FeedPage() {
   );
 
   const visiblePosts = tab === "following"
-    ? POSTS.filter((p) => supportHistory.some((s) => s.creatorId === p.creatorId))
+    ? POSTS.filter((p) =>
+        supportHistory.some((s) => s.creatorId === p.creatorId) ||
+        vipList.some((v) => v.creatorId === p.creatorId)
+      )
     : POSTS;
 
   function toggleLike(postId) {
