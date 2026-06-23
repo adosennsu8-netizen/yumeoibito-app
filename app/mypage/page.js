@@ -5,7 +5,7 @@ import { CREATORS } from "../data/creators";
 import { useAuth } from "../AuthContext";
 
 export default function MyPage() {
-  const { user, favorites, toggleFavorite, vipList } = useAuth();
+  const { user, favorites, toggleFavorite, vipList, supportHistory } = useAuth();
 
   if (!user) {
     return (
@@ -69,7 +69,7 @@ export default function MyPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, padding: "16px 16px 0" }}>
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "13px 15px" }}>
           <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>応援した人数</p>
-          <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{user.supportHistory.length}人</p>
+          <p style={{ fontSize: 21, fontWeight: 700, margin: 0 }}>{supportHistory.length}人</p>
         </div>
         <div style={{ background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", padding: "13px 15px" }}>
           <p style={{ fontSize: "11.5px", color: "var(--text-sub)", margin: "0 0 4px" }}>VIP加入中</p>
@@ -169,10 +169,10 @@ export default function MyPage() {
         {/* 応援履歴 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">❤️ 応援履歴</p>
-          {user.supportHistory.length === 0 ? (
+          {supportHistory.length === 0 ? (
             <p className="text-faint" style={{ fontSize: 13 }}>まだ応援した夢追い人がいません</p>
           ) : (
-            user.supportHistory.map((s, i) => {
+            supportHistory.map((s, i) => {
               const c = CREATORS[s.creatorId];
               return (
                 <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 0", borderBottom: "1px solid var(--border)" }}>
