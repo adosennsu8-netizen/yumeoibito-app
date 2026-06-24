@@ -1,11 +1,18 @@
 "use client";
 
 import CreatorTabs from "../CreatorTabs";
-import { CREATOR_EARNINGS, calcPayout } from "../data/creators";
+import { calcPayout } from "../data/creators";
+import { useAuth } from "../AuthContext";
 
 export default function CreatorEarningsPage() {
-  const data = CREATOR_EARNINGS;
-  const thisMonthGross = data.thisMonthSupportHistory.reduce((sum, s) => sum + s.amount, 0);
+  const { user } = useAuth();
+
+  const thisMonthSupportHistory = user?.creatorEarnings?.thisMonthSupportHistory || [];
+  const payoutAccountRegistered = user?.creatorEarnings?.payoutAccountRegistered || false;
+  const nextPayoutDate = user?.creatorEarnings?.nextPayoutDate || "未定";
+  const pastMonthsTotalReceived = user?.creatorEarnings?.pastMonthsTotalReceived || 0;
+
+  const thisMonthGross = thisMonthSupportHistory.reduce((sum, s) => sum + s.amount, 0);
   const thisMonthNet = calcPayout(thisMonthGross);
 
   function yen(n) {
@@ -42,47 +49,51 @@ export default function CreatorEarningsPage() {
           <span>ℹ️</span>
         </div>
 
-        <div className={`payout-status ${data.payoutAccountRegistered ? "registered" : "unregistered"}`}>
+        <div className={`payout-status ${payoutAccountRegistered ? "registered" : "unregistered"}`}>
           <div>
             <p className="ps-text">
-              {data.payoutAccountRegistered ? "振込先口座：登録済み" : "振込先口座：未登録"}
+              {payoutAccountRegistered ? "振込先口座：登録済み" : "振込先口座：未登録"}
             </p>
             <p className="ps-sub">
-              {data.payoutAccountRegistered
-                ? `次回振込予定日：${data.nextPayoutDate}`
+              {payoutAccountRegistered
+                ? `次回振込予定日：${nextPayoutDate}`
                 : "振込を受け取るには口座登録が必要です"}
             </p>
           </div>
           <button
             onClick={handleAccountClick}
-            className={data.payoutAccountRegistered ? "btn btn-ghost" : "btn btn-coral"}
+            className={payoutAccountRegistered ? "btn btn-ghost" : "btn btn-coral"}
             style={{ width: "auto", padding: "9px 14px", fontSize: "12.5px" }}
           >
-            {data.payoutAccountRegistered ? "口座情報を確認" : "口座を登録する"}
+            {payoutAccountRegistered ? "口座情報を確認" : "口座を登録する"}
           </button>
         </div>
 
         <div className="card card-pad" style={{ marginBottom: 16 }}>
           <p className="section-title">🏦 累計受取金額</p>
           <p style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>
-            {yen(data.pastMonthsTotalReceived + thisMonthNet)}
+            {yen(pastMonthsTotalReceived + thisMonthNet)}
           </p>
         </div>
 
         <div className="card card-pad">
           <p className="section-title">❤️ 今月の応援履歴</p>
-          {data.thisMonthSupportHistory.map((s, i) => (
-            <div key={i} className="earn-row">
-              <div>
-                <p className="sname">{s.supporterName}さん</p>
-                <p className="sdate">{s.date}</p>
+          {thisMonthSupportHistory.length === 0 ? (
+            <p className="text-faint" style={{ fontSize: 13 }}>まだ応援されていません</p>
+          ) : (
+            thisMonthSupportHistory.map((s, i) => (
+              <div key={i} className="earn-row">
+                <div>
+                  <p className="sname">{s.supporterName}さん</p>
+                  <p className="sdate">{s.date}</p>
+                </div>
+                <div className="amounts">
+                  <p className="gross">{yen(s.amount)}</p>
+                  <p className="net">{yen(calcPayout(s.amount))}</p>
+                </div>
               </div>
-              <div className="amounts">
-                <p className="gross">{yen(s.amount)}</p>
-                <p className="net">{yen(calcPayout(s.amount))}</p>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
     </div>
