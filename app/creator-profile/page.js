@@ -2,9 +2,20 @@
 
 import { useState } from "react";
 import CreatorTabs from "../CreatorTabs";
+import { useAuth } from "../AuthContext";
+import { PREFECTURES } from "../data/creators";
 
 export default function CreatorProfileEditPage() {
+  const { user } = useAuth();
   const [toast, setToast] = useState("");
+  const [form, setForm] = useState({
+    name: user?.name || "",
+    age: user?.age || "",
+    title: user?.title || "",
+    prefecture: user?.prefecture || "",
+    quote: user?.quote || "",
+    bio: user?.bio || "",
+  });
 
   function showToast(msg) {
     setToast(msg);
@@ -21,37 +32,9 @@ export default function CreatorProfileEditPage() {
       <CreatorTabs active="profile" />
 
       <div className="page-content">
-        <div
-          style={{
-            position: "relative",
-            height: 120,
-            borderRadius: "var(--radius-md)",
-            overflow: "hidden",
-            marginBottom: 18,
-            background: "var(--border)",
-          }}
-        >
-          <img
-            src=""
-            alt=""
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-          <button
-            style={{
-              position: "absolute",
-              right: 9,
-              bottom: 9,
-              background: "rgba(26,21,48,0.55)",
-              color: "#fff",
-              border: "none",
-              borderRadius: "var(--radius-md)",
-              fontSize: 11,
-              padding: "6px 11px",
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
+        <div style={{ position: "relative", height: 120, borderRadius: "var(--radius-md)", overflow: "hidden", marginBottom: 18, background: "var(--border)" }}>
+          <img src="" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <button style={{ position: "absolute", right: 9, bottom: 9, background: "rgba(26,21,48,0.55)", color: "#fff", border: "none", borderRadius: "var(--radius-md)", fontSize: 11, padding: "6px 11px", display: "flex", alignItems: "center", gap: 5 }}>
             📷 カバー画像を変更
           </button>
         </div>
@@ -59,131 +42,60 @@ export default function CreatorProfileEditPage() {
         <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 20 }}>
           <div style={{ position: "relative", flexShrink: 0 }}>
             <img
-              src="/logo.png"
+              src={user?.avatar || "/logo.png"}
               alt=""
               style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover" }}
             />
-            <button
-              aria-label="アイコンを変更"
-              style={{
-                position: "absolute",
-                right: -2,
-                bottom: -2,
-                width: 22,
-                height: 22,
-                borderRadius: "50%",
-                background: "var(--coral)",
-                border: "2px solid var(--bg-page)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "#fff",
-                fontSize: 10,
-              }}
-            >
+            <button aria-label="アイコンを変更" style={{ position: "absolute", right: -2, bottom: -2, width: 22, height: 22, borderRadius: "50%", background: "var(--coral)", border: "2px solid var(--bg-page)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10 }}>
               📷
             </button>
           </div>
           <div className="field" style={{ flex: 1, marginBottom: 0 }}>
             <label>表示名</label>
-            <input type="text" defaultValue="" placeholder="例：山田 太郎" />
+            <input type="text" value={form.name} placeholder="例：山田 太郎" onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} />
           </div>
         </div>
 
         <div className="field">
           <label>年齢</label>
-          <input type="number" defaultValue="" placeholder="28" min={18} max={99} style={{ maxWidth: 120 }} />
+          <input type="number" value={form.age} placeholder="28" min={18} max={99} style={{ maxWidth: 120 }} onChange={(e) => setForm((f) => ({ ...f, age: e.target.value }))} />
         </div>
 
         <div className="field">
           <label>肩書き・夢のひとこと</label>
-          <input type="text" defaultValue="" placeholder="例：陶芸家を目指して 5年目" />
+          <input type="text" value={form.title} placeholder="例：陶芸家を目指して 5年目" onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} />
         </div>
 
         <div className="field">
           <label>活動拠点の都道府県</label>
-          <select
-            defaultValue=""
-            style={{
-              width: "100%",
-              padding: "11px 13px",
-              borderRadius: "var(--radius-md)",
-              border: "1px solid var(--border)",
-              background: "var(--paper)",
-            }}
-          >
-            <option>東京都</option>
-            <option>大阪府</option>
-            <option>長野県</option>
-            <option>北海道</option>
+          <select value={form.prefecture} onChange={(e) => setForm((f) => ({ ...f, prefecture: e.target.value }))} style={{ width: "100%", padding: "11px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--paper)" }}>
+            <option value="" disabled>選択してください</option>
+            {PREFECTURES.map((p) => (
+              <option key={p} value={p}>{p}</option>
+            ))}
           </select>
         </div>
 
         <div className="field">
           <label>夢への一言（プロフィール上部に表示）</label>
-          <textarea
-            rows={3}
-            className="serif-input"
-            defaultValue="" placeholder="あなたの夢を一言で表すと？"
-          />
+          <textarea rows={3} className="serif-input" value={form.quote} placeholder="あなたの夢を一言で表すと？" onChange={(e) => setForm((f) => ({ ...f, quote: e.target.value }))} />
         </div>
 
         <div className="field">
           <label>自己紹介</label>
-          <textarea
-            rows={4}
-            defaultValue="" placeholder="どんな夢を、どんな想いで追いかけているか教えてください"
-          />
+          <textarea rows={4} value={form.bio} placeholder="どんな夢を、どんな想いで追いかけているか教えてください" onChange={(e) => setForm((f) => ({ ...f, bio: e.target.value }))} />
         </div>
 
         <div>
-          <label
-            style={{
-              fontSize: "11.5px",
-              color: "var(--text-faint)",
-              fontWeight: 700,
-              display: "block",
-              marginBottom: 8,
-            }}
-          >
-            カテゴリ
-          </label>
+          <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>カテゴリ</label>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-            <span className="tag tag-coral">陶芸 ×</span>
-            <span className="tag tag-amber">個展準備中 ×</span>
-            <button
-              style={{
-                fontSize: 12,
-                padding: "5px 12px",
-                borderRadius: "var(--radius-md)",
-                border: "1px dashed var(--text-faint)",
-                background: "none",
-                color: "var(--text-faint)",
-              }}
-            >
-              + 追加
-            </button>
+            <button style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}>+ 追加</button>
           </div>
         </div>
 
-        <div
-          style={{
-            background: "var(--cream)",
-            borderRadius: "var(--radius-md)",
-            padding: "11px 13px",
-            marginBottom: 20,
-            fontSize: 12,
-            color: "var(--text-faint)",
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 7,
-            lineHeight: 1.7,
-          }}
-        >
+        <div style={{ background: "var(--cream)", borderRadius: "var(--radius-md)", padding: "11px 13px", marginBottom: 20, fontSize: 12, color: "var(--text-faint)", display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.7 }}>
           <span>ℹ️</span>
-          <span>
-            過度な加工が施された写真（強い美肌加工等）はカバー画像・アイコン画像として利用できません。実際の見た目に近い写真をご登録ください。
-          </span>
+          <span>過度な加工が施された写真（強い美肌加工等）はカバー画像・アイコン画像として利用できません。実際の見た目に近い写真をご登録ください。</span>
         </div>
 
         <div className="payout-status registered" style={{ marginBottom: 20 }}>
@@ -194,31 +106,12 @@ export default function CreatorProfileEditPage() {
           <span style={{ color: "var(--coral-dark)" }}>✓</span>
         </div>
 
-        <button
-          onClick={() => showToast("プロフィールを保存しました")}
-          className="btn btn-coral btn-block"
-        >
+        <button onClick={() => showToast("プロフィールを保存しました")} className="btn btn-coral btn-block">
           プロフィールを保存
         </button>
       </div>
 
-      <div
-        style={{
-          position: "fixed",
-          bottom: 90,
-          left: "50%",
-          transform: `translateX(-50%) translateY(${toast ? "0" : "20px"})`,
-          background: "var(--navy)",
-          color: "#fff",
-          padding: "11px 22px",
-          borderRadius: "var(--radius-pill)",
-          fontSize: 13,
-          opacity: toast ? 1 : 0,
-          transition: "all 0.25s",
-          pointerEvents: "none",
-          zIndex: 50,
-        }}
-      >
+      <div style={{ position: "fixed", bottom: 90, left: "50%", transform: `translateX(-50%) translateY(${toast ? "0" : "20px"})`, background: "var(--navy)", color: "#fff", padding: "11px 22px", borderRadius: "var(--radius-pill)", fontSize: 13, opacity: toast ? 1 : 0, transition: "all 0.25s", pointerEvents: "none", zIndex: 50 }}>
         {toast}
       </div>
     </div>
