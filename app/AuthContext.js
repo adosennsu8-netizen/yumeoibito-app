@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
       ...profile,
       isCreator: true,
       joinedLabel: "夢追い人として登録",
-      avatar: "/logo.png",
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
       vip: [],
       supportHistory: [],
     });
