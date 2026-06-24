@@ -10,12 +10,15 @@ export default function FeedPage() {
   const { user, supportHistory, vipList, creatorPosts } = useAuth();
   const router = useRouter();
   const [tab, setTab] = useState("all");
+
+  const allPosts = [...creatorPosts, ...POSTS];
+
   const [likes, setLikes] = useState(
     Object.fromEntries(allPosts.map((p) => [p.id, { liked: false, count: p.likes }]))
   );
-  const allPosts = [...creatorPosts, ...POSTS];
+
   const visiblePosts = tab === "following"
-    ? POSTS.filter((p) =>
+    ? allPosts.filter((p) =>
         supportHistory.some((s) => s.creatorId === p.creatorId) ||
         vipList.some((v) => v.creatorId === p.creatorId)
       )
@@ -52,31 +55,13 @@ export default function FeedPage() {
       <div style={{ display: "flex", borderBottom: "1px solid var(--border)", background: "var(--paper)" }}>
         <button
           onClick={() => setTab("all")}
-          style={{
-            flex: 1,
-            padding: "13px",
-            fontSize: "13.5px",
-            fontWeight: 700,
-            background: "none",
-            border: "none",
-            borderBottom: tab === "all" ? "2px solid var(--coral)" : "2px solid transparent",
-            color: tab === "all" ? "var(--coral)" : "var(--text-faint)",
-          }}
+          style={{ flex: 1, padding: "13px", fontSize: "13.5px", fontWeight: 700, background: "none", border: "none", borderBottom: tab === "all" ? "2px solid var(--coral)" : "2px solid transparent", color: tab === "all" ? "var(--coral)" : "var(--text-faint)" }}
         >
           みんな
         </button>
         <button
           onClick={handleFollowingTab}
-          style={{
-            flex: 1,
-            padding: "13px",
-            fontSize: "13.5px",
-            fontWeight: 700,
-            background: "none",
-            border: "none",
-            borderBottom: tab === "following" ? "2px solid var(--coral)" : "2px solid transparent",
-            color: tab === "following" ? "var(--coral)" : "var(--text-faint)",
-          }}
+          style={{ flex: 1, padding: "13px", fontSize: "13.5px", fontWeight: 700, background: "none", border: "none", borderBottom: tab === "following" ? "2px solid var(--coral)" : "2px solid transparent", color: tab === "following" ? "var(--coral)" : "var(--text-faint)" }}
         >
           応援中
         </button>
@@ -98,17 +83,17 @@ export default function FeedPage() {
           </div>
         ) : (
           visiblePosts.map((p) => {
-            const c = CREATORS[p.creatorId];
-            const likeState = likes[p.id];
+            const c = p.creatorId && CREATORS[p.creatorId];
+            const likeState = likes[p.id] || { liked: false, count: 0 };
             return (
               <div className="post" key={p.id}>
-                <Link href={`/profile/${c.id}`} className="post-head">
-                  <img src={c.avatar} alt="" />
+                <Link href={c ? `/profile/${c.id}` : "#"} className="post-head">
+                  <img src={c ? c.avatar : p.creatorAvatar} alt="" />
                   <div style={{ flex: 1 }}>
-                    <p className="name">{c.name}</p>
+                    <p className="name">{c ? c.name : p.creatorName}</p>
                     <p className="time">{p.time}</p>
                   </div>
-                  {p.vip && <span className="vip-badge">👑 VIP限定</span>}
+                  {p.isVip && <span className="vip-badge">👑 VIP限定</span>}
                 </Link>
                 <p className="post-text">{p.text}</p>
                 {p.image && <img className="post-image" src={p.image} alt="" />}
