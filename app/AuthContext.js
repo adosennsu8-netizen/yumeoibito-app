@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
   const [vipList, setVipList] = useState([]);
   const [supportHistory, setSupportHistory] = useState([]);
-
+  const [creatorPosts, setCreatorPosts] = useState([]);
   function login() {
     const u = { ...CURRENT_USER };
     setUser(u);
@@ -77,7 +77,9 @@ export function AuthProvider({ children }) {
   function isSupporting(creatorId) {
     return supportHistory.some((s) => s.creatorId === creatorId);
   }
-
+  function addPost(post) {
+    setCreatorPosts((prev) => [post, ...prev]);
+  }
   return (
     <AuthContext.Provider value={{
       user, login, loginAsCreator, logout,
