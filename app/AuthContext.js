@@ -84,6 +84,12 @@ export function AuthProvider({ children }) {
   function registerCreator(profile) {
     setRegisteredCreators((prev) => [profile, ...prev]);
   }
+  function updateCreatorProfile(updatedProfile) {
+    setUser((prev) => ({ ...prev, ...updatedProfile }));
+    setRegisteredCreators((prev) =>
+      prev.map((c) => c.id === updatedProfile.id ? { ...c, ...updatedProfile } : c)
+    );
+  }
   return (
     <AuthContext.Provider value={{
       user, login, loginAsCreator, logout,
@@ -92,6 +98,7 @@ export function AuthProvider({ children }) {
       supportHistory, addSupport, isSupporting,
       creatorPosts, addPost,
       registeredCreators, registerCreator,
+      updateCreatorProfile,
     }}>
       {children}
     </AuthContext.Provider>

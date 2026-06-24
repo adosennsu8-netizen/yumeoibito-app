@@ -12,7 +12,7 @@ const CATEGORY_OPTIONS = [
 ];
 
 export default function CreatorProfileEditPage() {
-  const { user } = useAuth();
+  const { user, updateCreatorProfile } = useAuth();
   const [toast, setToast] = useState("");
   const [form, setForm] = useState({
     name: user?.name || "",
@@ -25,7 +25,15 @@ export default function CreatorProfileEditPage() {
   const [categories, setCategories] = useState([]);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
-
+  function handleSave() {
+    updateCreatorProfile({
+      id: user?.id,
+      ...form,
+      categories: categories,
+      categoryLabels: categories,
+    });
+    showToast("プロフィールを保存しました");
+  }
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 1800);
@@ -138,7 +146,7 @@ export default function CreatorProfileEditPage() {
           <span style={{ color: "var(--coral-dark)" }}>✓</span>
         </div>
 
-        <button onClick={() => showToast("プロフィールを保存しました")} className="btn btn-coral btn-block">
+        <button onClick={handleSave} className="btn btn-coral btn-block">
           プロフィールを保存
         </button>
       </div>
