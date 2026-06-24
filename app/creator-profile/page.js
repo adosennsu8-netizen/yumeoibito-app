@@ -22,7 +22,7 @@ export default function CreatorProfileEditPage() {
     quote: user?.quote || "",
     bio: user?.bio || "",
   });
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(user?.categories || []);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
   function handleSave() {
