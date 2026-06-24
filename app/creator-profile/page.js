@@ -5,6 +5,12 @@ import CreatorTabs from "../CreatorTabs";
 import { useAuth } from "../AuthContext";
 import { PREFECTURES } from "../data/creators";
 
+const CATEGORY_OPTIONS = [
+  "美容", "音楽", "スポーツ", "アート", "料理", "芸能", "起業",
+  "クリエイター", "テクノロジー", "ファッション", "執筆・文学",
+  "教育・指導", "農業・自然", "伝統工芸", "旅・冒険",
+];
+
 export default function CreatorProfileEditPage() {
   const { user } = useAuth();
   const [toast, setToast] = useState("");
@@ -16,10 +22,26 @@ export default function CreatorProfileEditPage() {
     quote: user?.quote || "",
     bio: user?.bio || "",
   });
+  const [categories, setCategories] = useState([]);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [customInput, setCustomInput] = useState("");
 
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 1800);
+  }
+
+  function toggleCategory(cat) {
+    setCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
+  }
+
+  function addCustom() {
+    const val = customInput.trim();
+    if (!val || categories.includes(val)) return;
+    setCategories((prev) => [...prev, val]);
+    setCustomInput("");
   }
 
   return (
@@ -41,11 +63,7 @@ export default function CreatorProfileEditPage() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 20 }}>
           <div style={{ position: "relative", flexShrink: 0 }}>
-            <img
-              src={user?.avatar || "/logo.png"}
-              alt=""
-              style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover" }}
-            />
+            <img src={user?.avatar || "/logo.png"} alt="" style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover" }} />
             <button aria-label="アイコンを変更" style={{ position: "absolute", right: -2, bottom: -2, width: 22, height: 22, borderRadius: "50%", background: "var(--coral)", border: "2px solid var(--bg-page)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10 }}>
               📷
             </button>
@@ -88,8 +106,22 @@ export default function CreatorProfileEditPage() {
 
         <div>
           <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>カテゴリ</label>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
-            <button style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}>+ 追加</button>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => toggleCategory(cat)}
+                style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "none", background: "var(--coral-light)", color: "var(--coral-dark)", cursor: "pointer" }}
+              >
+                {cat} ×
+              </button>
+            ))}
+            <button
+              onClick={() => setShowCategoryModal(true)}
+              style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}
+            >
+              + 追加
+            </button>
           </div>
         </div>
 
@@ -110,6 +142,55 @@ export default function CreatorProfileEditPage() {
           プロフィールを保存
         </button>
       </div>
+
+      {/* カテゴリ選択モーダル */}
+      {showCategoryModal && (
+        <div
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end" }}
+          onClick={() => setShowCategoryModal(false)}
+        >
+          <div
+            style={{ background: "var(--paper)", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", padding: "20px 16px 32px", width: "100%" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p style={{ fontSize: 15, fontWeight: 700, margin: "0 0 14px" }}>カテゴリを選択</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+              {CATEGORY_OPTIONS.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => toggleCategory(cat)}
+                  style={{
+                    fontSize: 13,
+                    padding: "7px 14px",
+                    borderRadius: "var(--radius-md)",
+                    border: "1.5px solid",
+                    borderColor: categories.includes(cat) ? "var(--coral)" : "var(--border)",
+                    background: categories.includes(cat) ? "var(--coral-light)" : "var(--paper)",
+                    color: categories.includes(cat) ? "var(--coral-dark)" : "var(--text-main)",
+                    cursor: "pointer",
+                  }}
+                >
+                  {categories.includes(cat) ? `✓ ${cat}` : cat}
+                </button>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+              <input
+                type="text"
+                placeholder="自由入力（例：ダンス）"
+                value={customInput}
+                onChange={(e) => setCustomInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") addCustom(); }}
+                style={{ flex: 1, padding: "10px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", fontSize: 13 }}
+              />
+              <button onClick={addCustom} className="btn btn-coral" style={{ padding: "10px 16px" }}>追加</button>
+            </div>
+            <button onClick={() => setShowCategoryModal(false)} className="btn btn-coral btn-block">
+              決定
+            </button>
+          </div>
+        </div>
+      )}
 
       <div style={{ position: "fixed", bottom: 90, left: "50%", transform: `translateX(-50%) translateY(${toast ? "0" : "20px"})`, background: "var(--navy)", color: "#fff", padding: "11px 22px", borderRadius: "var(--radius-pill)", fontSize: 13, opacity: toast ? 1 : 0, transition: "all 0.25s", pointerEvents: "none", zIndex: 50 }}>
         {toast}
