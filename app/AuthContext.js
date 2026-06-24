@@ -86,6 +86,7 @@ export function AuthProvider({ children }) {
       favorites, toggleFavorite, isFavorite,
       vipList, isVip, cancelVip, addVip,
       supportHistory, addSupport, isSupporting,
+      creatorPosts, addPost,
     }}>
       {children}
     </AuthContext.Provider>
