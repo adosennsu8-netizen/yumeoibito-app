@@ -15,7 +15,6 @@ export default function HomePage() {
   const [sortBy, setSortBy] = useState("new");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loadMoreRef = useRef(null);
-  const { user, toggleFavorite, isFavorite } = useAuth();
   const { user, toggleFavorite, isFavorite, registeredCreators } = useAuth();
   const router = useRouter();
 
