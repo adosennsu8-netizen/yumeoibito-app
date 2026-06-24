@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
   const [vipList, setVipList] = useState([]);
   const [supportHistory, setSupportHistory] = useState([]);
   const [creatorPosts, setCreatorPosts] = useState([]);
+  const [registeredCreators, setRegisteredCreators] = useState([]);
   function login() {
     const u = { ...CURRENT_USER };
     setUser(u);
@@ -80,6 +81,9 @@ export function AuthProvider({ children }) {
   function addPost(post) {
     setCreatorPosts((prev) => [post, ...prev]);
   }
+  function registerCreator(profile) {
+    setRegisteredCreators((prev) => [profile, ...prev]);
+  }
   return (
     <AuthContext.Provider value={{
       user, login, loginAsCreator, logout,
@@ -87,6 +91,7 @@ export function AuthProvider({ children }) {
       vipList, isVip, cancelVip, addVip,
       supportHistory, addSupport, isSupporting,
       creatorPosts, addPost,
+      registeredCreators, registerCreator,
     }}>
       {children}
     </AuthContext.Provider>

@@ -16,7 +16,7 @@ const STEP_LABELS = {
 
 export default function CreatorSignupPage() {
   const router = useRouter();
-  const { loginAsCreator } = useAuth();
+  const { loginAsCreator, registerCreator } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
   const [verifyFile, setVerifyFile] = useState(null);
   const [profile, setProfile] = useState({
@@ -56,7 +56,20 @@ export default function CreatorSignupPage() {
   }
 
   function handleProfileSubmit() {
-    loginAsCreator(profile);
+    const creatorProfile = {
+      ...profile,
+      id: `creator_${Date.now()}`,
+      isCreator: true,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
+      cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
+      categories: [],
+      categoryLabels: [],
+      vipCount: 0,
+      monthlySupportCount: 0,
+      ranking: [],
+    };
+    loginAsCreator(creatorProfile);
+    registerCreator(creatorProfile);
     goNext();
   }
 

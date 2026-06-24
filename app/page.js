@@ -16,15 +16,17 @@ export default function HomePage() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loadMoreRef = useRef(null);
   const { user, toggleFavorite, isFavorite } = useAuth();
+  const { user, toggleFavorite, isFavorite, registeredCreators } = useAuth();
   const router = useRouter();
 
   const categories = ["all", "art", "music", "sports", "biz"];
   const top10 = getMonthlyRankingTop10();
 
   const sortedFiltered = useMemo(() => {
-    const sorted = getSortedCreators(sortBy);
+    const allCreators = [...registeredCreators, ...getSortedCreators(sortBy)];
+    const sorted = sortBy === "new" ? allCreators : allCreators.sort((a, b) => (b.monthlySupportCount || 0) - (a.monthlySupportCount || 0));
     return sorted.filter((c) => {
-      const matchesCat = activeCat === "all" || c.categories.includes(activeCat);
+      const matchesCat = activeCat === "all" || (c.categories || []).includes(activeCat);
       const matchesPref = activePref === "all" || c.prefecture === activePref;
       return matchesCat && matchesPref;
     });
