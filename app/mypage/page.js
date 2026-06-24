@@ -46,9 +46,7 @@ export default function MyPage() {
     );
   }
 
-  const favoriteCreators = favorites
-    .map((id) => CREATORS[id])
-    .filter(Boolean);
+  const favoriteCreators = favorites.map((id) => CREATORS[id]).filter(Boolean);
 
   return (
     <div className="app-shell">
@@ -58,12 +56,17 @@ export default function MyPage() {
           alt=""
           style={{ width: 48, height: 48, borderRadius: "50%", objectFit: "cover" }}
         />
-        <div>
+        <div style={{ flex: 1 }}>
           <p style={{ fontSize: "15.5px", fontWeight: 700, margin: 0 }}>{user.name}</p>
           <p style={{ fontSize: 12, color: "var(--text-sub)", margin: "3px 0 0" }}>
-            {user.joinedLabel}
+            {user.isCreator ? `夢追い人 · ${user.title || ""}` : user.joinedLabel}
           </p>
         </div>
+        {user.isCreator && (
+          <Link href="/creator-earnings" className="btn btn-outline-purple" style={{ fontSize: 12, padding: "7px 14px" }}>
+            管理画面
+          </Link>
+        )}
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, padding: "16px 16px 0" }}>
@@ -82,44 +85,21 @@ export default function MyPage() {
       </div>
 
       <div className="page-content">
-
-        {/* お気に入り一覧 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">♥ お気に入り</p>
           {favoriteCreators.length === 0 ? (
-            <p className="text-faint" style={{ fontSize: 13 }}>
-              まだお気に入りに追加した夢追い人がいません
-            </p>
+            <p className="text-faint" style={{ fontSize: 13 }}>まだお気に入りに追加した夢追い人がいません</p>
           ) : (
             favoriteCreators.map((c) => (
-              <div
-                key={c.id}
-                style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 0", borderBottom: "1px solid var(--border)" }}
-              >
+              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 0", borderBottom: "1px solid var(--border)" }}>
                 <Link href={`/profile/${c.id}`} style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
-                  <img
-                    src={c.avatar}
-                    alt=""
-                    style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }}
-                  />
+                  <img src={c.avatar} alt="" style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover" }} />
                   <div>
                     <p style={{ fontSize: "13.5px", margin: 0 }}>{c.name}　{c.age}歳</p>
-                    <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>
-                      {c.title}　・　{c.prefecture}
-                    </p>
+                    <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>{c.title}　・　{c.prefecture}</p>
                   </div>
                 </Link>
-                <button
-                  onClick={() => toggleFavorite(c.id)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "var(--coral)",
-                    fontSize: 20,
-                    padding: "4px 8px",
-                    flexShrink: 0,
-                  }}
-                >
+                <button onClick={() => toggleFavorite(c.id)} style={{ background: "none", border: "none", color: "var(--coral)", fontSize: 20, padding: "4px 8px", flexShrink: 0 }}>
                   ♥
                 </button>
               </div>
@@ -127,7 +107,6 @@ export default function MyPage() {
           )}
         </div>
 
-        {/* VIP加入中 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">👑 VIP加入中</p>
           {vipList.length === 0 ? (
@@ -142,23 +121,11 @@ export default function MyPage() {
                   </Link>
                   <div style={{ flex: 1 }}>
                     <Link href={`/profile/${c.id}`} style={{ fontSize: "13.5px", margin: 0, display: "block" }}>{c.name}</Link>
-                    <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>
-                      次回更新日 {v.nextBilling} ・ ¥{v.price}/月
-                    </p>
+                    <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "1px 0 0" }}>次回更新日 {v.nextBilling} ・ ¥{v.price}/月</p>
                   </div>
                   <div style={{ display: "flex", gap: 6 }}>
-                    <Link
-                      href={`/vip/${c.id}`}
-                      style={{ fontSize: 12, padding: "6px 13px", borderRadius: "var(--radius-md)", background: "var(--purple-light)", color: "var(--purple)" }}
-                    >
-                      チャット
-                    </Link>
-                    <Link
-                      href={`/vip-cancel/${c.id}`}
-                      style={{ fontSize: 12, padding: "6px 13px", borderRadius: "var(--radius-md)", background: "var(--cream)", color: "var(--text-faint)" }}
-                    >
-                      解約
-                    </Link>
+                    <Link href={`/vip/${c.id}`} style={{ fontSize: 12, padding: "6px 13px", borderRadius: "var(--radius-md)", background: "var(--purple-light)", color: "var(--purple)" }}>チャット</Link>
+                    <Link href={`/vip-cancel/${c.id}`} style={{ fontSize: 12, padding: "6px 13px", borderRadius: "var(--radius-md)", background: "var(--cream)", color: "var(--text-faint)" }}>解約</Link>
                   </div>
                 </div>
               );
@@ -166,7 +133,6 @@ export default function MyPage() {
           )}
         </div>
 
-        {/* 応援履歴 */}
         <div className="card card-pad" style={{ marginTop: 16 }}>
           <p className="section-title">❤️ 応援履歴</p>
           {supportHistory.length === 0 ? (
@@ -193,31 +159,13 @@ export default function MyPage() {
           </p>
         </div>
 
-        <Link
-          className="card card-pad"
-          href="/creator-signup"
-          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}
-        >
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: "50%",
-              background: "var(--purple-light)",
-              color: "var(--purple)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
+        <Link className="card card-pad" href="/creator-signup" style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--purple-light)", color: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             👛
           </div>
           <div style={{ flex: 1 }}>
             <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>夢追い人として活動する</p>
-            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>
-              投稿の管理や、応援された金額の確認ができます
-            </p>
+            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>投稿の管理や、応援された金額の確認ができます</p>
           </div>
           <span style={{ color: "var(--text-faint)" }}>›</span>
         </Link>

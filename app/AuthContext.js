@@ -18,6 +18,19 @@ export function AuthProvider({ children }) {
     setSupportHistory([...u.supportHistory]);
   }
 
+  function loginAsCreator(profile) {
+    setUser({
+      ...profile,
+      isCreator: true,
+      joinedLabel: "夢追い人として登録",
+      avatar: "/logo.png",
+      vip: [],
+      supportHistory: [],
+    });
+    setVipList([]);
+    setSupportHistory([]);
+  }
+
   function logout() {
     setUser(null);
     setFavorites([]);
@@ -67,7 +80,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      user, login, logout,
+      user, login, loginAsCreator, logout,
       favorites, toggleFavorite, isFavorite,
       vipList, isVip, cancelVip, addVip,
       supportHistory, addSupport, isSupporting,
