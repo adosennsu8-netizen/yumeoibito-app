@@ -10,8 +10,8 @@ export default function ProfilePage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id;
-  const c = CREATORS[id];
-  const { user, toggleFavorite, isFavorite, isVip } = useAuth();
+  const { user, toggleFavorite, isFavorite, isVip, registeredCreators } = useAuth();
+  const c = CREATORS[id] || (registeredCreators || []).find((r) => r.id === id);
   const favorited = isFavorite(id);
   const vipMember = isVip ? isVip(id) : false;
   const posts = CREATOR_POSTS[id] || [];
@@ -40,7 +40,7 @@ export default function ProfilePage() {
     <div className="app-shell">
       <div style={{ position: "relative", height: 220, background: "var(--border)" }}>
         <img
-          src={c.cover}
+          src={c.cover || ""}
           alt=""
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
@@ -107,7 +107,7 @@ export default function ProfilePage() {
           }}
         >
           <img
-            src={c.avatar}
+            src={c.avatar || ""}
             alt=""
             style={{
               width: 64,
@@ -133,7 +133,7 @@ export default function ProfilePage() {
 
       <div className="page-content">
         <div>
-          {c.categoryLabels.map((t, i) => (
+          {(c.categoryLabels || []).map((t, i) => (
             <span key={t} className={`tag ${i === 0 ? "tag-coral" : "tag-amber"}`}>
               {t}
             </span>
@@ -149,37 +149,25 @@ export default function ProfilePage() {
 
         <div className="vip-count-row">
           <span>👑</span>
-          <span>VIP {c.vipCount}人が応援中</span>
+          <span>VIP {c.vipCount || 0}人が応援中</span>
         </div>
 
         <div className="card card-pad" style={{ marginBottom: 18 }}>
           <p className="section-title">🏆 応援ランキング</p>
-          {c.ranking.map((r, i) => (
-            <div
-              key={r.name}
-              style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0" }}
-            >
-              <span
-                style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  width: 18,
-                  color: i === 0 ? "var(--amber)" : "var(--text-faint)",
-                }}
-              >
-                {i + 1}
-              </span>
-              <img
-                src={r.avatar}
-                alt=""
-                style={{ width: 26, height: 26, borderRadius: "50%", objectFit: "cover" }}
-              />
-              <span style={{ fontSize: 13, flex: 1 }}>{r.name}さん</span>
-            </div>
-          ))}
-          <p className="text-faint" style={{ fontSize: 11, margin: "10px 0 0" }}>
-            ※金額は非公開です
-          </p>
+          {(c.ranking || []).length === 0 ? (
+            <p className="text-faint" style={{ fontSize: 13 }}>まだ応援者がいません</p>
+          ) : (
+            (c.ranking || []).map((r, i) => (
+              <div key={r.name} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0" }}>
+                <span style={{ fontSize: 13, fontWeight: 700, width: 18, color: i === 0 ? "var(--amber)" : "var(--text-faint)" }}>
+                  {i + 1}
+                </span>
+                <img src={r.avatar} alt="" style={{ width: 26, height: 26, borderRadius: "50%", objectFit: "cover" }} />
+                <span style={{ fontSize: 13, flex: 1 }}>{r.name}さん</span>
+              </div>
+            ))
+          )}
+          <p className="text-faint" style={{ fontSize: 11, margin: "10px 0 0" }}>※金額は非公開です</p>
         </div>
 
         <div style={{ display: "flex", gap: 10, marginTop: 18 }}>
@@ -199,7 +187,6 @@ export default function ProfilePage() {
           {favorited ? "♥ お気に入り済み" : "♡ お気に入りに追加"}
         </button>
 
-        {/* タイムライン */}
         <div style={{ marginTop: 22 }}>
           <p className="section-title">📝 最近の投稿</p>
           {posts.length === 0 ? (
@@ -208,11 +195,7 @@ export default function ProfilePage() {
             posts.map((post) => {
               const locked = post.isVip && !vipMember;
               return (
-                <div
-                  key={post.id}
-                  className="card card-pad"
-                  style={{ marginBottom: 12 }}
-                >
+                <div key={post.id} className="card card-pad" style={{ marginBottom: 12 }}>
                   <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "0 0 7px", display: "flex", alignItems: "center", gap: 6 }}>
                     {post.isVip && (
                       <span style={{ background: "var(--purple-light)", color: "var(--purple)", padding: "1px 7px", borderRadius: "var(--radius-pill)", fontSize: 10, fontWeight: 700 }}>
