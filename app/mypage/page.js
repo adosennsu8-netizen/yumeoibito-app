@@ -62,9 +62,13 @@ export default function MyPage() {
             {user.isCreator ? `夢追い人 · ${user.title || ""}` : user.joinedLabel}
           </p>
         </div>
-        {user.isCreator && (
+        {user.isCreator ? (
           <Link href="/creator-earnings" className="btn btn-outline-purple" style={{ fontSize: 12, padding: "7px 14px" }}>
             管理画面
+          </Link>
+        ) : (
+          <Link href="/creator-signup" className="btn btn-outline-coral" style={{ fontSize: 12, padding: "7px 14px" }}>
+            夢追い人になる
           </Link>
         )}
       </div>
@@ -159,13 +163,17 @@ export default function MyPage() {
           </p>
         </div>
 
-        <Link className="card card-pad" href="/creator-signup" style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--purple-light)", color: "var(--purple)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            👛
+        <Link
+          className="card card-pad"
+          href="/help"
+          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}
+        >
+          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--cream)", color: "var(--text-faint)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            ❓
           </div>
           <div style={{ flex: 1 }}>
-            <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>夢追い人として活動する</p>
-            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>投稿の管理や、応援された金額の確認ができます</p>
+            <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>ヘルプ・お問い合わせ</p>
+            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>よくある質問・アカウント削除</p>
           </div>
           <span style={{ color: "var(--text-faint)" }}>›</span>
         </Link>
