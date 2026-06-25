@@ -17,7 +17,7 @@ export default function PrivacyPage() {
           <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "0 0 20px" }}>最終更新日：2026年6月25日</p>
 
           <p style={{ fontSize: 13, lineHeight: 1.9, color: "var(--text-sub)", margin: "0 0 20px" }}>
-            株式会社Joynovation（以下「当社」）が運営するBLOSSOM（以下「本サービス」）は、ユーザーの個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
+            Joynovation（以下「当社」）が運営するBLOSSOM（以下「本サービス」）は、ユーザーの個人情報の取り扱いについて、以下のとおりプライバシーポリシーを定めます。
           </p>
 
           {[
