@@ -5,7 +5,7 @@ import { CREATORS } from "../data/creators";
 import { useAuth } from "../AuthContext";
 
 export default function MyPage() {
-  const { user, favorites, toggleFavorite, vipList, supportHistory } = useAuth();
+  const { user, favorites, toggleFavorite, vipList, supportHistory, logout } = useAuth();
 
   if (!user) {
     return (
@@ -168,6 +168,19 @@ export default function MyPage() {
           href="/help"
           style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}
         >
+          <button
+          onClick={async () => { await logout(); }}
+          className="card card-pad"
+          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12, width: "100%", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", background: "var(--paper)", cursor: "pointer" }}
+        >
+          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--cream)", color: "var(--text-faint)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            🚪
+          </div>
+          <div style={{ flex: 1, textAlign: "left" }}>
+            <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>ログアウト</p>
+            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>アカウントからサインアウトします</p>
+          </div>
+        </button>
           <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--cream)", color: "var(--text-faint)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             ❓
           </div>
