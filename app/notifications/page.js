@@ -10,6 +10,7 @@ const ICON_MAP = {
   vip: "👑",
   like: "🤍",
   favorite: "♥",
+  admin: "📣",
 };
 
 function linkFor(n) {
