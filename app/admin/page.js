@@ -3,8 +3,12 @@
 import { useState } from "react";
 import { useAuth } from "../AuthContext";
 
+const ADMIN_PASSWORD = "blossom2026admin"; // ← ここを好きなパスワードに変更
+
 export default function AdminPage() {
   const { addNotification } = useAuth();
+  const [password, setPassword] = useState("");
+  const [authed, setAuthed] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [toast, setToast] = useState("");
@@ -12,6 +16,14 @@ export default function AdminPage() {
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 1800);
+  }
+
+  function handleLogin() {
+    if (password === ADMIN_PASSWORD) {
+      setAuthed(true);
+    } else {
+      showToast("パスワードが違います");
+    }
   }
 
   function handleSend() {
@@ -37,30 +49,49 @@ export default function AdminPage() {
       </div>
 
       <div className="page-content">
-        <div className="card card-pad">
-          <p className="section-title">📣 運営通知を送信</p>
-          <div className="field">
-            <label>タイトル（任意）</label>
-            <input
-              type="text"
-              placeholder="例：メンテナンスのお知らせ"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
+        {!authed ? (
+          <div className="card card-pad">
+            <p className="section-title">🔒 管理者認証</p>
+            <div className="field">
+              <label>パスワード</label>
+              <input
+                type="password"
+                placeholder="管理者パスワードを入力"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") handleLogin(); }}
+              />
+            </div>
+            <button onClick={handleLogin} className="btn btn-coral btn-block">
+              ログイン
+            </button>
           </div>
-          <div className="field">
-            <label>本文</label>
-            <textarea
-              rows={5}
-              placeholder="通知の内容を入力してください"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-            />
+        ) : (
+          <div className="card card-pad">
+            <p className="section-title">📣 運営通知を送信</p>
+            <div className="field">
+              <label>タイトル（任意）</label>
+              <input
+                type="text"
+                placeholder="例：メンテナンスのお知らせ"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <div className="field">
+              <label>本文</label>
+              <textarea
+                rows={5}
+                placeholder="通知の内容を入力してください"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+            </div>
+            <button onClick={handleSend} className="btn btn-coral btn-block">
+              送信する
+            </button>
           </div>
-          <button onClick={handleSend} className="btn btn-coral btn-block">
-            送信する
-          </button>
-        </div>
+        )}
       </div>
 
       <div

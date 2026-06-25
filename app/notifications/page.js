@@ -14,6 +14,7 @@ const ICON_MAP = {
 };
 
 function linkFor(n) {
+  if (n.type === "admin") return "#";
   if (n.type === "post") return "/feed";
   if (n.type === "vip") return `/vip/${n.creatorId}`;
   return `/profile/${n.creatorId}`;
