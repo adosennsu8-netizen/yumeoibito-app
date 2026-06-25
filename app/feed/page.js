@@ -7,7 +7,7 @@ import { CREATORS, POSTS } from "../data/creators";
 import { useAuth } from "../AuthContext";
 
 export default function FeedPage() {
-  const { user, supportHistory, vipList, creatorPosts } = useAuth();
+  const { user, supportHistory, vipList, creatorPosts, addNotification } = useAuth();
   const router = useRouter();
   const [tab, setTab] = useState("all");
 
@@ -27,6 +27,16 @@ export default function FeedPage() {
   function toggleLike(postId) {
     setLikes((prev) => {
       const current = prev[postId];
+      if (!current.liked) {
+        const post = allPosts.find((p) => p.id === postId);
+        if (post) {
+          addNotification({
+            type: "like",
+            creatorId: post.creatorId,
+            text: `${post.creatorName || CREATORS[post.creatorId]?.name || ""}さんの投稿にいいねしました`,
+          });
+        }
+      }
       return {
         ...prev,
         [postId]: {

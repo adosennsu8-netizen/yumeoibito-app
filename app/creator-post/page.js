@@ -6,7 +6,7 @@ import CreatorTabs from "../CreatorTabs";
 import { useAuth } from "../AuthContext";
 
 export default function CreatorNewPostPage() {
-  const { user, addPost } = useAuth();
+  const { user, addPost, addNotification, favorites, vipList } = useAuth();
   const router = useRouter();
   const [toast, setToast] = useState("");
   const [vipOnly, setVipOnly] = useState(false);
@@ -26,17 +26,10 @@ export default function CreatorNewPostPage() {
     const today = new Date();
     const date = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
     addPost({
-      id: `post_${Date.now()}`,
+      addNotification({
+      type: "post",
       creatorId: user?.id || "new",
-      creatorName: user?.name || "",
-      creatorAvatar: user?.avatar || "",
-      title,
-      text,
-      isVip: vipOnly,
-      date,
-      time: "たった今",
-      likes: 0,
-      comments: [],
+      text: `${user?.name || ""}さんが新しく投稿しました`,
     });
     setTitle("");
     setText("");

@@ -10,7 +10,7 @@ export default function ProfilePage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id;
-  const { user, toggleFavorite, isFavorite, isVip, registeredCreators } = useAuth();
+  const { user, toggleFavorite, isFavorite, isVip, registeredCreators, addNotification } = useAuth();
   const c = CREATORS[id] || (registeredCreators || []).find((r) => r.id === id);
   const favorited = isFavorite(id);
   const vipMember = isVip ? isVip(id) : false;
@@ -32,6 +32,13 @@ export default function ProfilePage() {
     if (!user) {
       router.push(`/start?redirect=/profile/${id}`);
       return;
+    }
+    if (!favorited) {
+      addNotification({
+        type: "favorite",
+        creatorId: id,
+        text: `${c.name}さんをお気に入りに追加しました`,
+      });
     }
     toggleFavorite(id);
   }

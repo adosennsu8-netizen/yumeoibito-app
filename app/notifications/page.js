@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { CREATORS, NOTIFICATIONS } from "../data/creators";
+import { CREATORS } from "../data/creators";
+import { useAuth } from "../AuthContext";
 
 const ICON_MAP = {
   support: "❤️",
-  post: "👑",
+  post: "📝",
   vip: "👑",
-  like: "❤️",
+  like: "🤍",
+  favorite: "♥",
 };
 
 function linkFor(n) {
@@ -17,6 +19,8 @@ function linkFor(n) {
 }
 
 export default function NotificationsPage() {
+  const { notifications, markAllRead } = useAuth();
+
   return (
     <div className="app-shell">
       <header className="top-header">
@@ -25,24 +29,31 @@ export default function NotificationsPage() {
       </header>
 
       <div className="page-content">
-        {NOTIFICATIONS.length === 0 ? (
+        {notifications.length > 0 && (
+          <button
+            onClick={markAllRead}
+            style={{ fontSize: 12, color: "var(--text-faint)", background: "none", border: "none", padding: "0 0 12px", cursor: "pointer" }}
+          >
+            すべて既読にする
+          </button>
+        )}
+        {notifications.length === 0 ? (
           <div className="empty-state">
             <p>まだ通知はありません</p>
           </div>
         ) : (
           <div className="card card-pad">
-            {NOTIFICATIONS.map((n, i) => {
-              const c = CREATORS[n.creatorId];
+            {notifications.map((n, i) => {
               return (
                 <Link
-                  key={i}
+                  key={n.id}
                   href={linkFor(n)}
                   style={{
                     display: "flex",
                     alignItems: "flex-start",
                     gap: 12,
                     padding: "14px 0",
-                    borderBottom: i < NOTIFICATIONS.length - 1 ? "1px solid var(--border)" : "none",
+                    borderBottom: i < notifications.length - 1 ? "1px solid var(--border)" : "none",
                   }}
                 >
                   <div
@@ -54,39 +65,19 @@ export default function NotificationsPage() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      background:
-                        n.type === "support" || n.type === "like"
-                          ? "var(--coral-light)"
-                          : "var(--purple-light)",
+                      background: n.type === "post" ? "var(--purple-light)" : "var(--coral-light)",
                     }}
                   >
-                    {ICON_MAP[n.type]}
+                    {ICON_MAP[n.type] || "🔔"}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <p
-                      style={{
-                        fontSize: "13.5px",
-                        lineHeight: 1.65,
-                        margin: "0 0 3px",
-                        color: "var(--text-main)",
-                        fontWeight: n.read ? 400 : 700,
-                      }}
-                    >
+                    <p style={{ fontSize: "13.5px", lineHeight: 1.65, margin: "0 0 3px", color: "var(--text-main)", fontWeight: n.read ? 400 : 700 }}>
                       {n.text}
                     </p>
                     <p style={{ fontSize: 11, color: "var(--text-faint)", margin: 0 }}>{n.time}</p>
                   </div>
                   {!n.read && (
-                    <div
-                      style={{
-                        width: 7,
-                        height: 7,
-                        borderRadius: "50%",
-                        background: "var(--coral)",
-                        flexShrink: 0,
-                        marginTop: 6,
-                      }}
-                    ></div>
+                    <div style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--coral)", flexShrink: 0, marginTop: 6 }} />
                   )}
                 </Link>
               );

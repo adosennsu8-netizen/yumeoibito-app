@@ -12,6 +12,7 @@ export function AuthProvider({ children }) {
   const [supportHistory, setSupportHistory] = useState([]);
   const [creatorPosts, setCreatorPosts] = useState([]);
   const [registeredCreators, setRegisteredCreators] = useState([]);
+ 　const [notifications, setNotifications] = useState([]);
   function login() {
     const u = { ...CURRENT_USER };
     setUser(u);
@@ -84,6 +85,13 @@ export function AuthProvider({ children }) {
   function registerCreator(profile) {
     setRegisteredCreators((prev) => [profile, ...prev]);
   }
+  function addNotification(notification) {
+    setNotifications((prev) => [{ ...notification, id: Date.now(), read: false, time: "たった今" }, ...prev]);
+  }
+
+  function markAllRead() {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  }
   function updateCreatorProfile(updatedProfile) {
     setUser((prev) => ({ ...prev, ...updatedProfile }));
     setRegisteredCreators((prev) =>
@@ -99,6 +107,7 @@ export function AuthProvider({ children }) {
       creatorPosts, addPost,
       registeredCreators, registerCreator,
       updateCreatorProfile,
+      notifications, addNotification, markAllRead,
     }}>
       {children}
     </AuthContext.Provider>
