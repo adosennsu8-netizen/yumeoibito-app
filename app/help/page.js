@@ -81,9 +81,18 @@ export default function HelpPage() {
           <p style={{ fontSize: "13px", color: "var(--text-sub)", lineHeight: 1.8, margin: "0 0 14px" }}>
             ご不明な点やご要望はメールにてお問い合わせください。通常2営業日以内にご返信します。
           </p>
-          
-            href="mailto:support@blossom.app"
-            style={{ display: "block", textAlign: "center", padding: "12px 0", borderRadius: "var(--radius-md)", background: "var(--coral-light)", color: "var(--coral-dark)", fontSize: "13.5px", fontWeight: 700, textDecoration: "none" }}
+       href="mailto:support@blossom.app"
+            style={{
+              display: "block",
+              textAlign: "center",
+              padding: "12px 0",
+              borderRadius: "var(--radius-md)",
+              background: "var(--coral-light)",
+              color: "var(--coral-dark)",
+              fontSize: "13.5px",
+              fontWeight: 700,
+              textDecoration: "none",
+            }}
           >
             📧 support@blossom.app
           </a>
