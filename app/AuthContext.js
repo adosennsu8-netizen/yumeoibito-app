@@ -1,43 +1,80 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
-import { CURRENT_USER } from "./data/creators";
+import { createContext, useContext, useState, useEffect } from "react";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+} from "firebase/auth";
+import { auth } from "./lib/firebase";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [vipList, setVipList] = useState([]);
   const [supportHistory, setSupportHistory] = useState([]);
   const [creatorPosts, setCreatorPosts] = useState([]);
   const [registeredCreators, setRegisteredCreators] = useState([]);
- 　const [notifications, setNotifications] = useState([]);
-  function login() {
-    const u = { ...CURRENT_USER };
-    setUser(u);
-    setVipList([...u.vip]);
-    setSupportHistory([...u.supportHistory]);
-  }
+  const [notifications, setNotifications] = useState([]);
 
-  function loginAsCreator(profile) {
-    setUser({
-      ...profile,
-      isCreator: true,
-      joinedLabel: "夢追い人として登録",
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
-      vip: [],
-      supportHistory: [],
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser({
+          id: firebaseUser.uid,
+          name: firebaseUser.displayName || firebaseUser.email,
+          email: firebaseUser.email,
+          avatar: firebaseUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(firebaseUser.displayName || firebaseUser.email)}&background=f9a8a8&color=fff`,
+          joinedLabel: "登録済みユーザー",
+          vip: [],
+          supportHistory: [],
+          isCreator: false,
+        });
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
     });
-    setVipList([]);
-    setSupportHistory([]);
+    return () => unsubscribe();
+  }, []);
+
+  async function login(email, password) {
+    await signInWithEmailAndPassword(auth, email, password);
   }
 
-  function logout() {
+  async function loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  }
+
+  async function signup(email, password) {
+    await createUserWithEmailAndPassword(auth, email, password);
+  }
+
+  async function logout() {
+    await signOut(auth);
     setUser(null);
     setFavorites([]);
     setVipList([]);
     setSupportHistory([]);
+    setCreatorPosts([]);
+    setNotifications([]);
+  }
+
+  function loginAsCreator(profile) {
+    setUser((prev) => ({
+      ...prev,
+      ...profile,
+      isCreator: true,
+      joinedLabel: "夢追い人として登録",
+      avatar: profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
+    }));
   }
 
   function toggleFavorite(creatorId) {
@@ -79,12 +116,22 @@ export function AuthProvider({ children }) {
   function isSupporting(creatorId) {
     return supportHistory.some((s) => s.creatorId === creatorId);
   }
+
   function addPost(post) {
     setCreatorPosts((prev) => [post, ...prev]);
   }
+
   function registerCreator(profile) {
     setRegisteredCreators((prev) => [profile, ...prev]);
   }
+
+  function updateCreatorProfile(updatedProfile) {
+    setUser((prev) => ({ ...prev, ...updatedProfile }));
+    setRegisteredCreators((prev) =>
+      prev.map((c) => c.id === updatedProfile.id ? { ...c, ...updatedProfile } : c)
+    );
+  }
+
   function addNotification(notification) {
     setNotifications((prev) => [{ ...notification, id: Date.now(), read: false, time: "たった今" }, ...prev]);
   }
@@ -92,21 +139,19 @@ export function AuthProvider({ children }) {
   function markAllRead() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
   }
-  function updateCreatorProfile(updatedProfile) {
-    setUser((prev) => ({ ...prev, ...updatedProfile }));
-    setRegisteredCreators((prev) =>
-      prev.map((c) => c.id === updatedProfile.id ? { ...c, ...updatedProfile } : c)
-    );
+
+  if (loading) {
+    return null;
   }
+
   return (
     <AuthContext.Provider value={{
-      user, login, loginAsCreator, logout,
+      user, login, loginWithGoogle, signup, logout, loginAsCreator,
       favorites, toggleFavorite, isFavorite,
       vipList, isVip, cancelVip, addVip,
       supportHistory, addSupport, isSupporting,
       creatorPosts, addPost,
-      registeredCreators, registerCreator,
-      updateCreatorProfile,
+      registeredCreators, registerCreator, updateCreatorProfile,
       notifications, addNotification, markAllRead,
     }}>
       {children}
