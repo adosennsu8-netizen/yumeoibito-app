@@ -168,19 +168,6 @@ export default function MyPage() {
           href="/help"
           style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12 }}
         >
-          <button
-          onClick={async () => { await logout(); }}
-          className="card card-pad"
-          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12, width: "100%", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", background: "var(--paper)", cursor: "pointer" }}
-        >
-          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--cream)", color: "var(--text-faint)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            🚪
-          </div>
-          <div style={{ flex: 1, textAlign: "left" }}>
-            <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>ログアウト</p>
-            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>アカウントからサインアウトします</p>
-          </div>
-        </button>
           <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--cream)", color: "var(--text-faint)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             ❓
           </div>
@@ -190,6 +177,19 @@ export default function MyPage() {
           </div>
           <span style={{ color: "var(--text-faint)" }}>›</span>
         </Link>
+
+        <button
+          onClick={async () => { await logout(); }}
+          style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 12, width: "100%", padding: "16px", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", background: "var(--paper)", cursor: "pointer" }}
+        >
+          <div style={{ width: 38, height: 38, borderRadius: "50%", background: "var(--cream)", color: "var(--text-faint)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            🚪
+          </div>
+          <div style={{ flex: 1, textAlign: "left" }}>
+            <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>ログアウト</p>
+            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>アカウントからサインアウトします</p>
+          </div>
+        </button>
       </div>
     </div>
   );
