@@ -184,7 +184,9 @@ export default function HomePage() {
                     boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
                   }}
                 >
-                  {isFavorite(c.id) ? "♥" : "♡"}
+                  <span style={{ color: isFavorite(c.id) ? "#fff" : "var(--coral)" }}>
+                    {isFavorite(c.id) ? "♥" : "♡"}
+                  </span>
                 </button>
                 <div className="cover">
                   <img src={c.cover} alt="" />
