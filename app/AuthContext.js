@@ -54,8 +54,22 @@ export function AuthProvider({ children }) {
     await signInWithPopup(auth, provider);
   }
 
-  async function signup(email, password) {
+  async function signup(email, password, displayName) {
+    const { updateProfile } = await import("firebase/auth");
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    if (displayName) {
+      await updateProfile(userCredential.user, { displayName });
+      setUser({
+        id: userCredential.user.uid,
+        name: displayName,
+        email: userCredential.user.email,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f9a8a8&color=fff`,
+        joinedLabel: "登録済みユーザー",
+        vip: [],
+        supportHistory: [],
+        isCreator: false,
+      });
+    }
     return userCredential;
   }
 
@@ -154,7 +168,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      user, login, loginWithGoogle, signup, logout, loginAsCreator,
+      user, login, loginWithGoogle, signup, logout, loginAsCreator,updateDisplayName,
       favorites, toggleFavorite, isFavorite,
       vipList, isVip, cancelVip, addVip,
       supportHistory, addSupport, isSupporting,

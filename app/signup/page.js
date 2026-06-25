@@ -11,7 +11,7 @@ function SignupContent() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, loginWithGoogle, signup, updateDisplayName } = useAuth();
+  const { login, loginWithGoogle, signup } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
@@ -41,11 +41,7 @@ function SignupContent() {
     setLoading(true);
     setError("");
     try {
-      const { updateProfile } = await import("firebase/auth");
-      const userCredential = await signup(email, password);
-      await updateProfile(userCredential.user, { displayName: name });
-      await userCredential.user.reload();
-      await updateDisplayName(name);
+      await signup(email, password, name);
       setStep("done");
     } catch (e) {
       if (e.code === "auth/email-already-in-use") {
@@ -117,7 +113,10 @@ function SignupContent() {
           <button onClick={() => setStep("form")} className="btn btn-outline-coral btn-block">
             メールアドレスで登録
           </button>
-
+　　　　　<p style={{ fontSize: 12, color: "var(--text-faint)", textAlign: "center", marginTop: 16 }}>
+            すでにアカウントをお持ちの方は
+            <a href={`/login?redirect=${encodeURIComponent(redirect)}`} style={{ color: "var(--coral)", marginLeft: 4 }}>ログイン</a>
+          </p>
           {error && <p style={{ fontSize: 12, color: "var(--coral)", textAlign: "center", marginTop: 12 }}>{error}</p>}
 
           <p style={{ fontSize: 11, color: "var(--text-faint)", textAlign: "center", marginTop: 18, lineHeight: 1.8 }}>

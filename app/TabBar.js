@@ -43,7 +43,7 @@ export default function TabBar() {
           <span>マイページ</span>
         </Link>
       ) : (
-        <Link href="/start" className={isActive("/start") ? "active" : ""}>
+        <Link href="/login" className={isActive("/login") ? "active" : ""}>
           <span style={{ fontSize: 21 }}>🔓</span>
           <span>ログイン</span>
         </Link>
