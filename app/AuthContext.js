@@ -9,7 +9,15 @@ import {
   GoogleAuthProvider,
   signOut,
 } from "firebase/auth";
-import { auth } from "./lib/firebase";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
+import { auth, db } from "./lib/firebase";
 
 const AuthContext = createContext(null);
 
@@ -24,26 +32,46 @@ export function AuthProvider({ children }) {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-   const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
         await firebaseUser.reload();
-        setUser({
+        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        const userData = userDoc.exists() ? userDoc.data() : {};
+        const userObj = {
           id: firebaseUser.uid,
           name: firebaseUser.displayName || firebaseUser.email,
           email: firebaseUser.email,
           avatar: firebaseUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(firebaseUser.displayName || "user")}&background=f9a8a8&color=fff`,
           joinedLabel: "登録済みユーザー",
-          vip: [],
-          supportHistory: [],
-          isCreator: false,
-        });
+          isCreator: userData.isCreator || false,
+          title: userData.title || "",
+          prefecture: userData.prefecture || "",
+          quote: userData.quote || "",
+          bio: userData.bio || "",
+          categories: userData.categories || [],
+          categoryLabels: userData.categoryLabels || [],
+          ...userData,
+        };
+        setUser(userObj);
+        setFavorites(userData.favorites || []);
+        setVipList(userData.vipList || []);
+        setSupportHistory(userData.supportHistory || []);
+        setNotifications(userData.notifications || []);
       } else {
         setUser(null);
+        setFavorites([]);
+        setVipList([]);
+        setSupportHistory([]);
+        setNotifications([]);
       }
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
+
+  async function saveUserData(uid, data) {
+    await setDoc(doc(db, "users", uid), data, { merge: true });
+  }
 
   async function login(email, password) {
     await signInWithEmailAndPassword(auth, email, password);
@@ -59,14 +87,21 @@ export function AuthProvider({ children }) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     if (displayName) {
       await updateProfile(userCredential.user, { displayName });
+      await saveUserData(userCredential.user.uid, {
+        name: displayName,
+        email,
+        isCreator: false,
+        favorites: [],
+        vipList: [],
+        supportHistory: [],
+        notifications: [],
+      });
       setUser({
         id: userCredential.user.uid,
         name: displayName,
-        email: userCredential.user.email,
+        email,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=f9a8a8&color=fff`,
         joinedLabel: "登録済みユーザー",
-        vip: [],
-        supportHistory: [],
         isCreator: false,
       });
     }
@@ -83,28 +118,29 @@ export function AuthProvider({ children }) {
     setNotifications([]);
   }
 
-  function loginAsCreator(profile) {
-    setUser((prev) => ({
-      ...prev,
+  async function loginAsCreator(profile) {
+    const updatedUser = {
+      ...user,
       ...profile,
       isCreator: true,
       joinedLabel: "夢追い人として登録",
       avatar: profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
-    }));
-  }
-　async function updateDisplayName(name) {
-    const { updateProfile } = await import("firebase/auth");
-    if (auth.currentUser) {
-      await updateProfile(auth.currentUser, { displayName: name });
-      setUser((prev) => ({ ...prev, name }));
+    };
+    setUser(updatedUser);
+    if (user?.id) {
+      await saveUserData(user.id, { ...profile, isCreator: true });
     }
   }
-  function toggleFavorite(creatorId) {
-    setFavorites((prev) =>
-      prev.includes(creatorId)
-        ? prev.filter((id) => id !== creatorId)
-        : [...prev, creatorId]
-    );
+
+  async function toggleFavorite(creatorId) {
+    const isFav = favorites.includes(creatorId);
+    const newFavorites = isFav
+      ? favorites.filter((id) => id !== creatorId)
+      : [...favorites, creatorId];
+    setFavorites(newFavorites);
+    if (user?.id) {
+      await saveUserData(user.id, { favorites: newFavorites });
+    }
   }
 
   function isFavorite(creatorId) {
@@ -115,24 +151,38 @@ export function AuthProvider({ children }) {
     return vipList.some((v) => v.creatorId === creatorId);
   }
 
-  function cancelVip(creatorId) {
-    setVipList((prev) => prev.filter((v) => v.creatorId !== creatorId));
+  async function cancelVip(creatorId) {
+    const newVipList = vipList.filter((v) => v.creatorId !== creatorId);
+    setVipList(newVipList);
+    if (user?.id) {
+      await saveUserData(user.id, { vipList: newVipList });
+    }
   }
 
-  function addVip(creatorId) {
+  async function addVip(creatorId) {
     if (!vipList.some((v) => v.creatorId === creatorId)) {
       const today = new Date();
       const next = new Date(today);
       next.setMonth(next.getMonth() + 1);
       const nextBilling = `${next.getFullYear()}年${next.getMonth() + 1}月${next.getDate()}日`;
-      setVipList((prev) => [...prev, { creatorId, nextBilling, price: 500 }]);
+      const newVip = { creatorId, nextBilling, price: 500 };
+      const newVipList = [...vipList, newVip];
+      setVipList(newVipList);
+      if (user?.id) {
+        await saveUserData(user.id, { vipList: newVipList });
+      }
     }
   }
 
-  function addSupport(creatorId) {
+  async function addSupport(creatorId) {
     const today = new Date();
     const date = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-    setSupportHistory((prev) => [{ creatorId, date }, ...prev]);
+    const newSupport = { creatorId, date };
+    const newHistory = [newSupport, ...supportHistory];
+    setSupportHistory(newHistory);
+    if (user?.id) {
+      await saveUserData(user.id, { supportHistory: newHistory });
+    }
   }
 
   function isSupporting(creatorId) {
@@ -143,23 +193,38 @@ export function AuthProvider({ children }) {
     setCreatorPosts((prev) => [post, ...prev]);
   }
 
-  function registerCreator(profile) {
+  async function registerCreator(profile) {
     setRegisteredCreators((prev) => [profile, ...prev]);
+    if (user?.id) {
+      await saveUserData(user.id, { ...profile, isCreator: true });
+    }
   }
 
-  function updateCreatorProfile(updatedProfile) {
+  async function updateCreatorProfile(updatedProfile) {
     setUser((prev) => ({ ...prev, ...updatedProfile }));
     setRegisteredCreators((prev) =>
       prev.map((c) => c.id === updatedProfile.id ? { ...c, ...updatedProfile } : c)
     );
+    if (user?.id) {
+      await saveUserData(user.id, updatedProfile);
+    }
   }
 
-  function addNotification(notification) {
-    setNotifications((prev) => [{ ...notification, id: Date.now(), read: false, time: "たった今" }, ...prev]);
+  async function addNotification(notification) {
+    const newNotif = { ...notification, id: Date.now(), read: false, time: "たった今" };
+    const newNotifications = [newNotif, ...notifications];
+    setNotifications(newNotifications);
+    if (user?.id) {
+      await saveUserData(user.id, { notifications: newNotifications });
+    }
   }
 
-  function markAllRead() {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  async function markAllRead() {
+    const updated = notifications.map((n) => ({ ...n, read: true }));
+    setNotifications(updated);
+    if (user?.id) {
+      await saveUserData(user.id, { notifications: updated });
+    }
   }
 
   if (loading) {
@@ -168,7 +233,7 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={{
-      user, login, loginWithGoogle, signup, logout, loginAsCreator,updateDisplayName,
+      user, login, loginWithGoogle, signup, logout, loginAsCreator,
       favorites, toggleFavorite, isFavorite,
       vipList, isVip, cancelVip, addVip,
       supportHistory, addSupport, isSupporting,
