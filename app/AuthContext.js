@@ -24,13 +24,14 @@ export function AuthProvider({ children }) {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+   const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
+        await firebaseUser.reload();
         setUser({
           id: firebaseUser.uid,
           name: firebaseUser.displayName || firebaseUser.email,
           email: firebaseUser.email,
-          avatar: firebaseUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(firebaseUser.displayName || firebaseUser.email)}&background=f9a8a8&color=fff`,
+          avatar: firebaseUser.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(firebaseUser.displayName || "user")}&background=f9a8a8&color=fff`,
           joinedLabel: "登録済みユーザー",
           vip: [],
           supportHistory: [],
