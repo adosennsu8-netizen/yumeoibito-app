@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "../AuthContext";
 
-const ADMIN_PASSWORD = "blossom2026admin"; // ← ここを好きなパスワードに変更
+const ADMIN_PASSWORD = "8413"; // ← ここを好きなパスワードに変更
 
 export default function AdminPage() {
   const { addNotification } = useAuth();
