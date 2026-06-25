@@ -42,9 +42,22 @@ export default function HelpPage() {
   const [openIndex, setOpenIndex] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  function handleDelete() {
-    logout();
-    router.push("/");
+  async function handleDelete() {
+    try {
+      const { deleteUser } = await import("firebase/auth");
+      const { auth } = await import("../lib/firebase");
+      if (auth.currentUser) {
+        await deleteUser(auth.currentUser);
+      }
+      logout();
+      router.push("/");
+    } catch (e) {
+      if (e.code === "auth/requires-recent-login") {
+        alert("セキュリティのため、一度ログアウトして再ログインしてからアカウントを削除してください。");
+      } else {
+        alert("削除に失敗しました。もう一度お試しください。");
+      }
+    }
   }
 
   return (
