@@ -30,8 +30,8 @@ function SignupContent() {
   }
 
   async function handleEmailSubmit() {
-    if (!email || !password) {
-      setError("メールアドレスとパスワードを入力してください");
+    if (!name || !email || !password) {
+      setError("すべての項目を入力してください");
       return;
     }
     if (password.length < 8) {
@@ -41,11 +41,12 @@ function SignupContent() {
     setLoading(true);
     setError("");
     try {
-      await signup(email, password);
+      const { updateProfile } = await import("firebase/auth");
+      const userCredential = await signup(email, password);
+      await updateProfile(userCredential.user, { displayName: name });
       setStep("done");
     } catch (e) {
       if (e.code === "auth/email-already-in-use") {
-        // 既存ユーザーはログイン
         try {
           await login(email, password);
           router.push(redirect);

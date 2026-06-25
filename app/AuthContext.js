@@ -54,7 +54,8 @@ export function AuthProvider({ children }) {
   }
 
   async function signup(email, password) {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    return userCredential;
   }
 
   async function logout() {
