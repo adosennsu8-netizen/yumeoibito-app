@@ -78,7 +78,13 @@ export function AuthProvider({ children }) {
       avatar: profile.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
     }));
   }
-
+　async function updateDisplayName(name) {
+    const { updateProfile } = await import("firebase/auth");
+    if (auth.currentUser) {
+      await updateProfile(auth.currentUser, { displayName: name });
+      setUser((prev) => ({ ...prev, name }));
+    }
+  }
   function toggleFavorite(creatorId) {
     setFavorites((prev) =>
       prev.includes(creatorId)

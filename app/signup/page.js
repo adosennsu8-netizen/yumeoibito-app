@@ -11,7 +11,7 @@ function SignupContent() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login, loginWithGoogle, signup } = useAuth();
+  const { login, loginWithGoogle, signup, updateDisplayName } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
@@ -44,6 +44,8 @@ function SignupContent() {
       const { updateProfile } = await import("firebase/auth");
       const userCredential = await signup(email, password);
       await updateProfile(userCredential.user, { displayName: name });
+      await userCredential.user.reload();
+      await updateDisplayName(name);
       setStep("done");
     } catch (e) {
       if (e.code === "auth/email-already-in-use") {
