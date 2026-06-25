@@ -26,7 +26,19 @@ export default function CreatorNewPostPage() {
     const today = new Date();
     const date = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
     addPost({
-      addNotification({
+      id: `post_${Date.now()}`,
+      creatorId: user?.id || "new",
+      creatorName: user?.name || "",
+      creatorAvatar: user?.avatar || "",
+      title,
+      text,
+      isVip: vipOnly,
+      date,
+      time: "たった今",
+      likes: 0,
+      comments: [],
+    });
+    addNotification({
       type: "post",
       creatorId: user?.id || "new",
       text: `${user?.name || ""}さんが新しく投稿しました`,
