@@ -67,7 +67,7 @@ export default function TermsPage() {
             },
             {
               title: "第12条（お問い合わせ）",
-              body: "本規約に関するお問い合わせは以下までご連絡ください。\n\n株式会社Joynovation\nWebサイト：https://www.joynovation.com/\nメール：support@blossom.app",
+              body: "本規約に関するお問い合わせは以下までご連絡ください。\n\nJoynovation\nWebサイト：https://www.joynovation.com/\nメール：support@blossom.app",
             },
           ].map((section, i) => (
             <div key={i} style={{ marginBottom: 22 }}>
