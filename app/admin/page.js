@@ -34,6 +34,8 @@ export default function AdminPage() {
     addNotification({
       type: "admin",
       creatorId: null,
+      title: title || "運営からのお知らせ",
+      body: text,
       text: title ? `【${title}】${text}` : text,
     });
     setTitle("");

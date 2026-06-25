@@ -29,8 +29,9 @@ export default function AdminNoticePage() {
       </div>
       <div className="page-content">
         <div className="card card-pad">
-          <p style={{ fontSize: "11px", color: "var(--text-faint)", margin: "0 0 10px" }}>{n.time}</p>
-          <p style={{ fontSize: "15px", lineHeight: 1.8, margin: 0 }}>{n.text}</p>
+          <p style={{ fontSize: "15px", fontWeight: 700, margin: "0 0 10px" }}>{n.title}</p>
+          <p style={{ fontSize: "11px", color: "var(--text-faint)", margin: "0 0 14px" }}>{n.time}</p>
+          <p style={{ fontSize: "13.5px", lineHeight: 1.8, margin: 0 }}>{n.body}</p>
         </div>
       </div>
     </div>
