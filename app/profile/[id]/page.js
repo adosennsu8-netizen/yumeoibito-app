@@ -83,6 +83,10 @@ export default function ProfilePage() {
         <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-sub)", margin: "0 0 18px" }}>{c.bio}</p>
 
         <div className="vip-count-row">
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 14, fontSize: 12, color: "var(--text-sub)" }}>
+          <span style={{ color: "var(--coral)" }}>✅</span>
+          <span>本人確認済み（身分証確認）</span>
+        </div>
           <span>👑</span>
           <span>VIP {c.vipCount || 0}人が応援中</span>
         </div>
