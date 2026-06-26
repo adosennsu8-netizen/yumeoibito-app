@@ -120,6 +120,9 @@ export default function HelpPage() {
           <Link href="/privacy" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", fontSize: "13.5px", textDecoration: "none", color: "var(--text-main)" }}>
             プライバシーポリシー <span style={{ color: "var(--text-faint)" }}>›</span>
           </Link>
+          <Link href="/tokushoho" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", fontSize: "13.5px", textDecoration: "none", color: "var(--text-main)" }}>
+            特定商取引法に基づく表記 <span style={{ color: "var(--text-faint)" }}>›</span>
+          </Link>
         </div>
 
         {/* アカウント削除 */}
