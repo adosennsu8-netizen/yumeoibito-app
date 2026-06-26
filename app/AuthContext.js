@@ -171,6 +171,24 @@ export function AuthProvider({ children }) {
       if (user?.id) {
         await saveUserData(user.id, { vipList: newVipList });
       }
+      // 夢追い人に通知を送る
+      try {
+        const creatorRef = doc(db, "users", creatorId);
+        const creatorDoc = await getDoc(creatorRef);
+        if (creatorDoc.exists()) {
+          const creatorNotifs = creatorDoc.data().notifications || [];
+          const newNotif = {
+            id: Date.now(),
+            type: "vip",
+            text: `${user?.name || "誰か"}さんがVIPに加入しました`,
+            read: false,
+            time: "たった今",
+          };
+          await setDoc(creatorRef, { notifications: [newNotif, ...creatorNotifs] }, { merge: true });
+        }
+      } catch (e) {
+        console.log("通知送信エラー", e);
+      }
     }
   }
 
@@ -182,6 +200,24 @@ export function AuthProvider({ children }) {
     setSupportHistory(newHistory);
     if (user?.id) {
       await saveUserData(user.id, { supportHistory: newHistory });
+    }
+    // 夢追い人に通知を送る
+    try {
+      const creatorRef = doc(db, "users", creatorId);
+      const creatorDoc = await getDoc(creatorRef);
+      if (creatorDoc.exists()) {
+        const creatorNotifs = creatorDoc.data().notifications || [];
+        const newNotif = {
+          id: Date.now(),
+          type: "support",
+          text: `${user?.name || "誰か"}さんが応援してくれました`,
+          read: false,
+          time: "たった今",
+        };
+        await setDoc(creatorRef, { notifications: [newNotif, ...creatorNotifs] }, { merge: true });
+      }
+    } catch (e) {
+      console.log("通知送信エラー", e);
     }
   }
 
