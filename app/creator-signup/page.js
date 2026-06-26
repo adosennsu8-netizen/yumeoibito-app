@@ -2,19 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useAuth } from "../AuthContext";
-import { PREFECTURES, CATEGORY_LABELS } from "../data/creators";
+import { PREFECTURES } from "../data/creators";
 
 const CATEGORY_OPTIONS = [
   "美容", "音楽", "スポーツ", "アート", "料理", "芸能", "起業",
   "クリエイター", "テクノロジー", "ファッション", "執筆・文学",
   "教育・指導", "農業・自然", "伝統工芸", "旅・冒険",
 ];
-const STEPS = ["account", "verify", "profile", "done"];
+
+const STEPS = ["account", "profile", "done"];
 const STEP_LABELS = {
   account: "アカウント登録",
-  verify: "本人確認",
   profile: "プロフィール設定",
   done: "完了",
 };
@@ -23,7 +22,6 @@ export default function CreatorSignupPage() {
   const router = useRouter();
   const { loginAsCreator, registerCreator } = useAuth();
   const [stepIndex, setStepIndex] = useState(0);
-  const [verifyFile, setVerifyFile] = useState(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
   const [profile, setProfile] = useState({
@@ -54,15 +52,6 @@ export default function CreatorSignupPage() {
     goNext();
   }
 
-  function handleVerifyUpload() {
-    setVerifyFile("driver_license.jpg");
-  }
-
-  function handleVerifyNext() {
-    if (!verifyFile) return;
-    goNext();
-  }
-
   function handleProfileSubmit() {
     const creatorProfile = {
       ...profile,
@@ -90,27 +79,16 @@ export default function CreatorSignupPage() {
 
       <div style={{ display: "flex", gap: 4, padding: "12px 16px 0" }}>
         {STEPS.map((s, i) => (
-          <div
-            key={s}
-            style={{
-              flex: 1,
-              height: 4,
-              borderRadius: 2,
-              background: i <= stepIndex ? "var(--coral)" : "var(--border)",
-            }}
-          />
+          <div key={s} style={{ flex: 1, height: 4, borderRadius: 2, background: i <= stepIndex ? "var(--coral)" : "var(--border)" }} />
         ))}
       </div>
 
       {step === "account" && (
         <div style={{ padding: "28px 22px 24px" }}>
           <div style={{ textAlign: "center", marginBottom: 30 }}>
-            <p className="serif" style={{ fontSize: 19, fontWeight: 700, margin: "0 0 8px" }}>
-              夢追い人として始める
-            </p>
+            <p className="serif" style={{ fontSize: 19, fontWeight: 700, margin: "0 0 8px" }}>夢追い人として始める</p>
             <p className="text-sub" style={{ fontSize: 13, lineHeight: 1.8, margin: 0 }}>
-              まずはアカウントを作成してください。<br />
-              この後、本人確認とプロフィール設定があります。
+              まずはアカウントを作成してください。<br />この後、プロフィール設定があります。
             </p>
           </div>
           <button onClick={handleAccountChoice} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: "var(--radius-md)", fontSize: 14, fontWeight: 700, width: "100%", border: "1px solid var(--border)", background: "var(--paper)", marginBottom: 10 }}>
@@ -124,34 +102,7 @@ export default function CreatorSignupPage() {
             <span style={{ fontSize: 11, color: "var(--text-faint)" }}>または</span>
             <div style={{ flex: 1, height: 1, background: "var(--border)" }}></div>
           </div>
-          <button onClick={handleAccountChoice} className="btn btn-outline-coral btn-block">
-            メールアドレスで登録
-          </button>
-        </div>
-      )}
-
-      {step === "verify" && (
-        <div className="page-content">
-          <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "10px 0 8px" }}>本人確認書類のアップロード</p>
-          <p className="text-sub" style={{ fontSize: "12.5px", lineHeight: 1.8, margin: "0 0 18px" }}>
-            運転免許証など、顔写真付きの本人確認書類をアップロードしてください。これは夢追い人を男性に限定する方針の実効性を担保するために必須の手続きです。
-          </p>
-          <div
-            onClick={handleVerifyUpload}
-            style={{ border: verifyFile ? "1.5px solid var(--coral)" : "1.5px dashed var(--text-faint)", borderRadius: "var(--radius-md)", padding: 30, textAlign: "center", marginBottom: 18, color: verifyFile ? "var(--coral-dark)" : "var(--text-faint)", background: verifyFile ? "var(--coral-light)" : "transparent", cursor: "pointer" }}
-          >
-            <span style={{ fontSize: 24, display: "block", margin: "0 auto 8px" }}>{verifyFile ? "✅" : "🪪"}</span>
-            <span style={{ fontSize: "12.5px" }}>
-              {verifyFile ? `アップロード済み：${verifyFile}` : "タップして運転免許証を撮影・アップロード"}
-            </span>
-          </div>
-          <div style={{ background: "var(--cream)", borderRadius: "var(--radius-md)", padding: "11px 13px", marginBottom: 20, fontSize: 12, color: "var(--text-faint)", display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.7 }}>
-            <span>🔒</span>
-            <span>アップロードされた書類は本人確認のみに利用され、運営は口座情報・書類画像を直接保持しません。審査には1〜2営業日ほどお時間をいただく場合があります。</span>
-          </div>
-          <button onClick={handleVerifyNext} disabled={!verifyFile} className={verifyFile ? "btn btn-coral btn-block" : "btn btn-disabled btn-block"}>
-            {verifyFile ? "次へ進む" : "書類をアップロードしてください"}
-          </button>
+          <button onClick={handleAccountChoice} className="btn btn-outline-coral btn-block">メールアドレスで登録</button>
         </div>
       )}
 
@@ -186,30 +137,26 @@ export default function CreatorSignupPage() {
             <label>自己紹介</label>
             <textarea rows={4} placeholder="どんな夢を、どんな想いで追いかけているか教えてください" value={profile.bio} onChange={(e) => setProfile((p) => ({ ...p, bio: e.target.value }))} />
           </div>
-          <div style={{ background: "var(--cream)", borderRadius: "var(--radius-md)", padding: "11px 13px", marginBottom: 20, fontSize: 12, color: "var(--text-faint)", display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.7 }}>
-           <div>
+
+          <div>
             <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>カテゴリ</label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
               {profile.categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setProfile((p) => ({ ...p, categories: p.categories.filter((c) => c !== cat) }))}
-                  style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "none", background: "var(--coral-light)", color: "var(--coral-dark)", cursor: "pointer" }}
-                >
+                <button key={cat} onClick={() => setProfile((p) => ({ ...p, categories: p.categories.filter((c) => c !== cat) }))} style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "none", background: "var(--coral-light)", color: "var(--coral-dark)", cursor: "pointer" }}>
                   {cat} ×
                 </button>
               ))}
-              <button
-                onClick={() => setShowCategoryModal(true)}
-                style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}
-              >
+              <button onClick={() => setShowCategoryModal(true)} style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}>
                 + 追加
               </button>
             </div>
           </div>
+
+          <div style={{ background: "var(--cream)", borderRadius: "var(--radius-md)", padding: "11px 13px", marginBottom: 20, fontSize: 12, color: "var(--text-faint)", display: "flex", alignItems: "flex-start", gap: 7, lineHeight: 1.7 }}>
             <span>ℹ️</span>
-            <span>プロフィール写真は登録完了後にマイページから設定できます。過度な加工が施された写真は利用できません。</span>
+            <span>プロフィール写真は登録完了後にマイページから設定できます。</span>
           </div>
+
           <button onClick={handleProfileSubmit} className="btn btn-coral btn-block">登録を完了する</button>
         </div>
       )}
@@ -219,85 +166,30 @@ export default function CreatorSignupPage() {
           <div style={{ width: 60, height: 60, borderRadius: "50%", background: "var(--coral-light)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 18px", fontSize: 28 }}>✓</div>
           <p style={{ fontSize: 17, fontWeight: 700, margin: "0 0 8px" }}>登録が完了しました</p>
           <p className="text-sub" style={{ fontSize: "13.5px", margin: "0 0 12px", lineHeight: 1.8 }}>
-            本人確認の審査が完了するまで、プロフィールは非公開状態になります。
-          </p>
-          <p className="text-faint" style={{ fontSize: 12, margin: "0 0 26px", lineHeight: 1.8 }}>
-            審査結果はメールでお知らせします（モックアップでは即時「確認済み」として扱います）。
+            プロフィールを公開して、応援を受け取りましょう。
           </p>
           <button onClick={() => router.push("/creator-earnings")} className="btn btn-coral btn-block">
             収益・口座管理画面へ
           </button>
         </div>
       )}
+
       {showCategoryModal && (
-        <div
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end" }}
-          onClick={() => setShowCategoryModal(false)}
-        >
-          <div
-            style={{ background: "var(--paper)", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", padding: "20px 16px 32px", width: "100%" }}
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end" }} onClick={() => setShowCategoryModal(false)}>
+          <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", padding: "20px 16px 32px", width: "100%" }} onClick={(e) => e.stopPropagation()}>
             <p style={{ fontSize: 15, fontWeight: 700, margin: "0 0 14px" }}>カテゴリを選択</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
               {CATEGORY_OPTIONS.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setProfile((p) => ({
-                    ...p,
-                    categories: p.categories.includes(cat)
-                      ? p.categories.filter((c) => c !== cat)
-                      : [...p.categories, cat],
-                  }))}
-                  style={{
-                    fontSize: 13,
-                    padding: "7px 14px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1.5px solid",
-                    borderColor: profile.categories.includes(cat) ? "var(--coral)" : "var(--border)",
-                    background: profile.categories.includes(cat) ? "var(--coral-light)" : "var(--paper)",
-                    color: profile.categories.includes(cat) ? "var(--coral-dark)" : "var(--text-main)",
-                    cursor: "pointer",
-                  }}
-                >
+                <button key={cat} onClick={() => setProfile((p) => ({ ...p, categories: p.categories.includes(cat) ? p.categories.filter((c) => c !== cat) : [...p.categories, cat] }))} style={{ fontSize: 13, padding: "7px 14px", borderRadius: "var(--radius-md)", border: "1.5px solid", borderColor: profile.categories.includes(cat) ? "var(--coral)" : "var(--border)", background: profile.categories.includes(cat) ? "var(--coral-light)" : "var(--paper)", color: profile.categories.includes(cat) ? "var(--coral-dark)" : "var(--text-main)", cursor: "pointer" }}>
                   {profile.categories.includes(cat) ? `✓ ${cat}` : cat}
                 </button>
               ))}
             </div>
             <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-              <input
-                type="text"
-                placeholder="自由入力（例：ダンス）"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    const val = customInput.trim();
-                    if (val && !profile.categories.includes(val)) {
-                      setProfile((p) => ({ ...p, categories: [...p.categories, val] }));
-                    }
-                    setCustomInput("");
-                  }
-                }}
-                style={{ flex: 1, padding: "10px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", fontSize: 13 }}
-              />
-              <button
-                onClick={() => {
-                  const val = customInput.trim();
-                  if (val && !profile.categories.includes(val)) {
-                    setProfile((p) => ({ ...p, categories: [...p.categories, val] }));
-                  }
-                  setCustomInput("");
-                }}
-                className="btn btn-coral"
-                style={{ padding: "10px 16px" }}
-              >
-                追加
-              </button>
+              <input type="text" placeholder="自由入力（例：ダンス）" value={customInput} onChange={(e) => setCustomInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { const val = customInput.trim(); if (val && !profile.categories.includes(val)) { setProfile((p) => ({ ...p, categories: [...p.categories, val] })); } setCustomInput(""); } }} style={{ flex: 1, padding: "10px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", fontSize: 13 }} />
+              <button onClick={() => { const val = customInput.trim(); if (val && !profile.categories.includes(val)) { setProfile((p) => ({ ...p, categories: [...p.categories, val] })); } setCustomInput(""); }} className="btn btn-coral" style={{ padding: "10px 16px" }}>追加</button>
             </div>
-            <button onClick={() => setShowCategoryModal(false)} className="btn btn-coral btn-block">
-              決定
-            </button>
+            <button onClick={() => setShowCategoryModal(false)} className="btn btn-coral btn-block">決定</button>
           </div>
         </div>
       )}
