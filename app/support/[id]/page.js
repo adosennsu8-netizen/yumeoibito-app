@@ -6,6 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { CREATORS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 
+
 const PRESET_AMOUNTS = [300, 1000, 3000, 5000, 10000];
 
 // このページ専用の一時保存キー（夢追い人ごとに分ける）

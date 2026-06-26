@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CREATORS, CREATOR_POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 
+
 export default function ProfilePage() {
   const params = useParams();
   const router = useRouter();

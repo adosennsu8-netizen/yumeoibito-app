@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { CREATORS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 
+
 export default function VipCancelPage() {
   const params = useParams();
   const id = params.id;

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CREATORS, POSTS, CURRENT_USER } from "../../data/creators";
 
+
 export default function PostDetailPage() {
   const params = useParams();
   const id = params.id;

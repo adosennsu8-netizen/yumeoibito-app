@@ -7,6 +7,7 @@ import { useAuth } from "../../AuthContext";
 import { db } from "../../lib/firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 
+
 export default function VipPage() {
   const router = useRouter();
   const params = useParams();
