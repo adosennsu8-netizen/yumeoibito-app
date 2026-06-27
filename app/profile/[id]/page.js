@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const id = params.id;
   const { user, toggleFavorite, isFavorite, isVip, registeredCreators, addNotification } = useAuth();
-  const c = CREATORS[id] || (registeredCreators || []).find((r) => r.id === id);
+  const c = CREATORS[id] || (user?.id === id ? user : null) || (registeredCreators || []).find((r) => r.id === id);
   const favorited = isFavorite(id);
   const vipMember = isVip ? isVip(id) : false;
   const posts = CREATOR_POSTS[id] || [];

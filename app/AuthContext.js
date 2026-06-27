@@ -262,7 +262,7 @@ export function AuthProvider({ children }) {
       await saveUserData(user.id, { notifications: updated });
     }
   }
- async function updateUserName(newName, avatarUrl, coverUrl) {
+ 　async function updateUserName(newName, avatarUrl, coverUrl) {
     const newAvatar = avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(newName)}&background=f9a8a8&color=fff`;
     const updates = { name: newName, avatar: newAvatar };
     if (coverUrl) updates.cover = coverUrl;
