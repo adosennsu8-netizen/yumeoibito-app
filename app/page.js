@@ -18,7 +18,7 @@ export default function HomePage() {
   const { user, toggleFavorite, isFavorite, registeredCreators } = useAuth();
   const router = useRouter();
 
-  const categories = ["all", "art", "music", "sports", "biz"];
+  const categories = ["all", "美容", "音楽", "スポーツ", "アート", "料理", "芸能", "起業", "クリエイター", "テクノロジー", "ファッション", "執筆・文学", "教育・指導", "農業・自然", "伝統工芸", "旅・冒険"];
   const top10 = getMonthlyRankingTop10();
 
   const sortedFiltered = useMemo(() => {
