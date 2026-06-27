@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../AuthContext";
 import { PREFECTURES } from "../data/creators";
+import { auth } from "../lib/firebase";
+import { signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 const CATEGORY_OPTIONS = [
   "美容", "音楽", "スポーツ", "アート", "料理", "芸能", "起業",
@@ -24,6 +26,11 @@ export default function CreatorSignupPage() {
   const [stepIndex, setStepIndex] = useState(0);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showEmailForm, setShowEmailForm] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
     age: "",
@@ -48,16 +55,51 @@ export default function CreatorSignupPage() {
     }
   }
 
-  function handleAccountChoice() {
-    goNext();
+  async function handleGoogleLogin() {
+    setLoading(true);
+    setError("");
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      goNext();
+    } catch (e) {
+      setError("Googleログインに失敗しました");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleEmailSignup() {
+    if (!email || !password) {
+      setError("メールアドレスとパスワードを入力してください");
+      return;
+    }
+    if (password.length < 8) {
+      setError("パスワードは8文字以上にしてください");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      goNext();
+    } catch (e) {
+      if (e.code === "auth/email-already-in-use") {
+        setError("このメールアドレスはすでに登録されています");
+      } else {
+        setError("登録に失敗しました。もう一度お試しください");
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleProfileSubmit() {
     const creatorProfile = {
       ...profile,
-      id: `creator_${Date.now()}`,
+      id: auth.currentUser?.uid || `creator_${Date.now()}`,
       isCreator: true,
-      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
+      avatar: auth.currentUser?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name)}&background=f9a8a8&color=fff`,
       cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
       categories: profile.categories,
       categoryLabels: profile.categories,
@@ -91,18 +133,43 @@ export default function CreatorSignupPage() {
               まずはアカウントを作成してください。<br />この後、プロフィール設定があります。
             </p>
           </div>
-          <button onClick={handleAccountChoice} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: "var(--radius-md)", fontSize: 14, fontWeight: 700, width: "100%", border: "1px solid var(--border)", background: "var(--paper)", marginBottom: 10 }}>
+
+          <button
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: "var(--radius-md)", fontSize: 14, fontWeight: 700, width: "100%", border: "1px solid var(--border)", background: "var(--paper)", marginBottom: 10 }}
+          >
             🔍 Googleで続ける
           </button>
-          <button onClick={handleAccountChoice} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 9, padding: 12, borderRadius: "var(--radius-md)", fontSize: 14, fontWeight: 700, width: "100%", border: "none", background: "#06C755", color: "#fff", marginBottom: 10 }}>
-            💬 LINEで続ける
-          </button>
+
           <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "18px 0" }}>
             <div style={{ flex: 1, height: 1, background: "var(--border)" }}></div>
             <span style={{ fontSize: 11, color: "var(--text-faint)" }}>または</span>
             <div style={{ flex: 1, height: 1, background: "var(--border)" }}></div>
           </div>
-          <button onClick={handleAccountChoice} className="btn btn-outline-coral btn-block">メールアドレスで登録</button>
+
+          {!showEmailForm ? (
+            <button onClick={() => setShowEmailForm(true)} className="btn btn-outline-coral btn-block">
+              メールアドレスで登録
+            </button>
+          ) : (
+            <div>
+              <div className="field">
+                <label>メールアドレス</label>
+                <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              <div className="field">
+                <label>パスワード</label>
+                <input type="password" placeholder="8文字以上" value={password} onChange={(e) => setPassword(e.target.value)} />
+              </div>
+              {error && <p style={{ fontSize: 12, color: "var(--coral)", marginBottom: 12 }}>{error}</p>}
+              <button onClick={handleEmailSignup} disabled={loading} className="btn btn-coral btn-block">
+                {loading ? "登録中..." : "登録する"}
+              </button>
+            </div>
+          )}
+
+          {error && !showEmailForm && <p style={{ fontSize: 12, color: "var(--coral)", textAlign: "center", marginTop: 12 }}>{error}</p>}
         </div>
       )}
 
