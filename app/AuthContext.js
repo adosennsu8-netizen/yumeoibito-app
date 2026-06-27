@@ -262,6 +262,17 @@ export function AuthProvider({ children }) {
       await saveUserData(user.id, { notifications: updated });
     }
   }
+  async function updateUserName(newName, avatarUrl) {
+    const newAvatar = avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(newName)}&background=f9a8a8&color=fff`;
+    setUser((prev) => ({
+      ...prev,
+      name: newName,
+      avatar: newAvatar,
+    }));
+    if (user?.id) {
+      await saveUserData(user.id, { name: newName, avatar: newAvatar });
+    }
+  }
 
   if (loading) {
     return null;
@@ -275,7 +286,7 @@ export function AuthProvider({ children }) {
       supportHistory, addSupport, isSupporting,
       creatorPosts, addPost,
       registeredCreators, registerCreator, updateCreatorProfile,
-      notifications, addNotification, markAllRead,
+      notifications, addNotification, markAllRead,updateUserName,
     }}>
       {children}
     </AuthContext.Provider>
