@@ -51,11 +51,13 @@ export default function MyPage() {
   return (
     <div className="app-shell">
       <div style={{ display: "flex", alignItems: "center", gap: 13, padding: 18, background: "var(--paper)", borderBottom: "1px solid var(--border)" }}>
-        <img
-          src={user.avatar}
-          alt=""
-          style={{ width: 48, height: 48, borderRadius: "50%", objectFit: "cover" }}
-        />
+        <Link href="/account">
+          <img
+            src={user.avatar}
+            alt=""
+            style={{ width: 48, height: 48, borderRadius: "50%", objectFit: "cover" }}
+          />
+        </Link>
         <div style={{ flex: 1 }}>
           <p style={{ fontSize: "15.5px", fontWeight: 700, margin: 0 }}>{user.name}</p>
           <p style={{ fontSize: 12, color: "var(--text-sub)", margin: "3px 0 0" }}>
