@@ -28,7 +28,7 @@ export default function CreatorProfileEditPage() {
   const [categories, setCategories] = useState(user?.categories || []);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
-
+　const [prefOpen, setPrefOpen] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
   const [avatarFile, setAvatarFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(user?.cover || "");
@@ -153,16 +153,28 @@ export default function CreatorProfileEditPage() {
 
         <div className="field">
           <label>活動拠点の都道府県</label>
-          <select
-            value={form.prefecture}
-            onChange={(e) => setForm((f) => ({ ...f, prefecture: e.target.value }))}
-            style={{ width: "100%", padding: "11px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--paper)", fontSize: 14, appearance: "auto", WebkitAppearance: "auto" }}
-          >
-            <option value="" disabled>選択してください</option>
-            {PREFECTURES.map((p) => (
-              <option key={p} value={p}>{p}</option>
-            ))}
-          </select>
+          <div style={{ position: "relative" }}>
+            <button
+              onClick={() => setPrefOpen((v) => !v)}
+              style={{ width: "100%", padding: "11px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--paper)", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, color: form.prefecture ? "var(--text-main)" : "var(--text-faint)", cursor: "pointer" }}
+            >
+              <span>{form.prefecture || "選択してください"}</span>
+              <span>{prefOpen ? "▲" : "▼"}</span>
+            </button>
+            {prefOpen && (
+              <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", zIndex: 50, maxHeight: 240, overflowY: "auto", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+                {PREFECTURES.map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => { setForm((f) => ({ ...f, prefecture: p })); setPrefOpen(false); }}
+                    style={{ width: "100%", padding: "11px 13px", textAlign: "left", fontSize: 13, background: form.prefecture === p ? "var(--coral-light)" : "none", border: "none", borderTop: "1px solid var(--border)", color: form.prefecture === p ? "var(--coral-dark)" : "var(--text-main)", cursor: "pointer" }}
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="field">
