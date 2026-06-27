@@ -3,7 +3,7 @@
 import { CREATORS, POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 import { useParams } from "next/navigation";
-import { CREATORS, POSTS, CURRENT_USER } from "../../data/creators";
+
 
 
 export default function PostDetailPage() {
