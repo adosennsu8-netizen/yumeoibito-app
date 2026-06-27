@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { CREATORS, POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 import { useParams } from "next/navigation";
