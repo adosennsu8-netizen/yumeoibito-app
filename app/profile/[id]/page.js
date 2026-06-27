@@ -174,7 +174,7 @@ export default function ProfilePage() {
                   ) : (
                     <p style={{ fontSize: "13.5px", lineHeight: 1.8, margin: 0 }}>{post.text}</p>
                   )}
-                </div>
+                </Link>
               );
             })
           )}
