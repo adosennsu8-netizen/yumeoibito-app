@@ -102,7 +102,7 @@ export default function AccountPage() {
                 📷
               </div>
             </div>
-            <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverChange} style={{ display: "none" }} />
+            <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverChange} style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }} />
           </div>
         )}
 
