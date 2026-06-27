@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CREATORS, POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 
 
