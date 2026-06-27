@@ -163,6 +163,7 @@ export default function ProfilePage() {
                     )}
                     {post.date}
                   </p>
+              
                   {locked ? (
                     <div style={{ textAlign: "center", padding: "10px 0 4px" }}>
                       <p style={{ fontSize: 13, color: "var(--text-faint)", margin: "0 0 10px" }}>🔒 VIP会員限定の投稿です</p>
