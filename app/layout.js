@@ -3,7 +3,7 @@ import TabBar from "./TabBar";
 import { AuthProvider } from "./AuthContext";
 
 export const metadata = {
-  title: "BLOSSOM｜彼の夢が、あなたの夢になる。",
+  title: "BLOSSOM｜あの人の夢が、あなたの夢になる。",
   description: "夢追い人推し活プラットフォーム BLOSSOM",
 };
 
