@@ -14,6 +14,7 @@ export default function HomePage() {
   const [activePref, setActivePref] = useState("all");
   const [sortBy, setSortBy] = useState("new");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [prefOpen, setPrefOpen] = useState(false);
   const loadMoreRef = useRef(null);
   const { user, toggleFavorite, isFavorite, registeredCreators } = useAuth();
   const router = useRouter();
@@ -126,13 +127,33 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div className="pref-select-row">
-          <select value={activePref} onChange={(e) => setActivePref(e.target.value)}>
-            <option value="all">都道府県で絞り込む（すべて）</option>
-            {PREFECTURES.map((p) => (
-              <option key={p} value={p}>{p}</option>
-            ))}
-          </select>
+        <div style={{ position: "relative", marginBottom: 10 }}>
+          <button
+            onClick={() => setPrefOpen((v) => !v)}
+            style={{ width: "100%", padding: "11px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--paper)", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13, color: activePref === "all" ? "var(--text-faint)" : "var(--text-main)", cursor: "pointer" }}
+          >
+            <span>{activePref === "all" ? "都道府県で絞り込む（すべて）" : activePref}</span>
+            <span>{prefOpen ? "▲" : "▼"}</span>
+          </button>
+          {prefOpen && (
+            <div style={{ position: "absolute", top: "100%", left: 0, right: 0, background: "var(--paper)", border: "1px solid var(--border)", borderRadius: "var(--radius-md)", zIndex: 50, maxHeight: 240, overflowY: "auto", boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+              <button
+                onClick={() => { setActivePref("all"); setPrefOpen(false); }}
+                style={{ width: "100%", padding: "11px 13px", textAlign: "left", fontSize: 13, background: activePref === "all" ? "var(--coral-light)" : "none", border: "none", color: activePref === "all" ? "var(--coral-dark)" : "var(--text-main)", cursor: "pointer" }}
+              >
+                すべて
+              </button>
+              {PREFECTURES.map((p) => (
+                <button
+                  key={p}
+                  onClick={() => { setActivePref(p); setPrefOpen(false); }}
+                  style={{ width: "100%", padding: "11px 13px", textAlign: "left", fontSize: 13, background: activePref === p ? "var(--coral-light)" : "none", border: "none", borderTop: "1px solid var(--border)", color: activePref === p ? "var(--coral-dark)" : "var(--text-main)", cursor: "pointer" }}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", margin: "14px 0 6px" }}>
