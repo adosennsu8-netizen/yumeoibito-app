@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import CreatorTabs from "../CreatorTabs";
 import { useAuth } from "../AuthContext";
 import { PREFECTURES } from "../data/creators";
+import { auth, storage } from "../lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const CATEGORY_OPTIONS = [
   "美容", "音楽", "スポーツ", "アート", "料理", "芸能", "起業",
@@ -14,6 +16,7 @@ const CATEGORY_OPTIONS = [
 export default function CreatorProfileEditPage() {
   const { user, updateCreatorProfile } = useAuth();
   const [toast, setToast] = useState("");
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: user?.name || "",
     age: user?.age || "",
@@ -25,18 +28,66 @@ export default function CreatorProfileEditPage() {
   const [categories, setCategories] = useState(user?.categories || []);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
-  function handleSave() {
-    updateCreatorProfile({
-      id: user?.id,
-      ...form,
-      categories: categories,
-      categoryLabels: categories,
-    });
-    showToast("プロフィールを保存しました");
-  }
+
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(user?.cover || "");
+  const [coverFile, setCoverFile] = useState(null);
+  const avatarInputRef = useRef(null);
+  const coverInputRef = useRef(null);
+
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 1800);
+  }
+
+  function handleAvatarChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  }
+
+  function handleCoverChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setCoverFile(file);
+    setCoverPreview(URL.createObjectURL(file));
+  }
+
+  async function handleSave() {
+    setLoading(true);
+    try {
+      let avatarUrl = user?.avatar;
+      let coverUrl = user?.cover;
+
+      if (avatarFile) {
+        const storageRef = ref(storage, `avatars/${auth.currentUser.uid}/${Date.now()}`);
+        await uploadBytes(storageRef, avatarFile);
+        avatarUrl = await getDownloadURL(storageRef);
+      }
+
+      if (coverFile) {
+        const storageRef = ref(storage, `covers/${auth.currentUser.uid}/${Date.now()}`);
+        await uploadBytes(storageRef, coverFile);
+        coverUrl = await getDownloadURL(storageRef);
+      }
+
+      await updateCreatorProfile({
+        id: user?.id,
+        ...form,
+        avatar: avatarUrl,
+        cover: coverUrl,
+        categories,
+        categoryLabels: categories,
+      });
+      showToast("プロフィールを保存しました");
+    } catch (e) {
+      console.error(e);
+      showToast("保存に失敗しました");
+    } finally {
+      setLoading(false);
+    }
   }
 
   function toggleCategory(cat) {
@@ -62,19 +113,27 @@ export default function CreatorProfileEditPage() {
       <CreatorTabs active="profile" />
 
       <div className="page-content">
-        <div style={{ position: "relative", height: 120, borderRadius: "var(--radius-md)", overflow: "hidden", marginBottom: 18, background: "var(--border)" }}>
-          <img src="" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          <button style={{ position: "absolute", right: 9, bottom: 9, background: "rgba(26,21,48,0.55)", color: "#fff", border: "none", borderRadius: "var(--radius-md)", fontSize: 11, padding: "6px 11px", display: "flex", alignItems: "center", gap: 5 }}>
+        {/* カバー画像 */}
+        <div style={{ position: "relative", height: 120, borderRadius: "var(--radius-md)", overflow: "hidden", marginBottom: 18, background: "var(--border)", cursor: "pointer" }}
+          onClick={() => coverInputRef.current.click()}>
+          {coverPreview
+            ? <img src={coverPreview} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            : <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "var(--text-faint)", fontSize: 13 }}>タップして設定</div>
+          }
+          <div style={{ position: "absolute", right: 9, bottom: 9, background: "rgba(26,21,48,0.55)", color: "#fff", border: "none", borderRadius: "var(--radius-md)", fontSize: 11, padding: "6px 11px", display: "flex", alignItems: "center", gap: 5 }}>
             📷 カバー画像を変更
-          </button>
+          </div>
+          <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverChange} style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }} />
         </div>
 
+        {/* アバター＋表示名 */}
         <div style={{ display: "flex", alignItems: "center", gap: 13, marginBottom: 20 }}>
-          <div style={{ position: "relative", flexShrink: 0 }}>
-            <img src={user?.avatar || "/logo.png"} alt="" style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover" }} />
-            <button aria-label="アイコンを変更" style={{ position: "absolute", right: -2, bottom: -2, width: 22, height: 22, borderRadius: "50%", background: "var(--coral)", border: "2px solid var(--bg-page)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10 }}>
+          <div style={{ position: "relative", flexShrink: 0 }} onClick={() => avatarInputRef.current.click()}>
+            <img src={avatarPreview || "/logo.png"} alt="" style={{ width: 56, height: 56, borderRadius: "50%", objectFit: "cover", cursor: "pointer" }} />
+            <div style={{ position: "absolute", right: -2, bottom: -2, width: 22, height: 22, borderRadius: "50%", background: "var(--coral)", border: "2px solid var(--bg-page)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 10 }}>
               📷
-            </button>
+            </div>
+            <input ref={avatarInputRef} type="file" accept="image/*" onChange={handleAvatarChange} style={{ position: "absolute", inset: 0, opacity: 0, cursor: "pointer", width: "100%", height: "100%" }} />
           </div>
           <div className="field" style={{ flex: 1, marginBottom: 0 }}>
             <label>表示名</label>
@@ -94,7 +153,11 @@ export default function CreatorProfileEditPage() {
 
         <div className="field">
           <label>活動拠点の都道府県</label>
-          <select value={form.prefecture} onChange={(e) => setForm((f) => ({ ...f, prefecture: e.target.value }))} style={{ width: "100%", padding: "11px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--paper)" }}>
+          <select
+            value={form.prefecture}
+            onChange={(e) => setForm((f) => ({ ...f, prefecture: e.target.value }))}
+            style={{ width: "100%", padding: "11px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "var(--paper)", fontSize: 14, appearance: "auto", WebkitAppearance: "auto" }}
+          >
             <option value="" disabled>選択してください</option>
             {PREFECTURES.map((p) => (
               <option key={p} value={p}>{p}</option>
@@ -116,18 +179,11 @@ export default function CreatorProfileEditPage() {
           <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>カテゴリ</label>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
             {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => toggleCategory(cat)}
-                style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "none", background: "var(--coral-light)", color: "var(--coral-dark)", cursor: "pointer" }}
-              >
+              <button key={cat} onClick={() => toggleCategory(cat)} style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "none", background: "var(--coral-light)", color: "var(--coral-dark)", cursor: "pointer" }}>
                 {cat} ×
               </button>
             ))}
-            <button
-              onClick={() => setShowCategoryModal(true)}
-              style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}
-            >
+            <button onClick={() => setShowCategoryModal(true)} style={{ fontSize: 12, padding: "5px 12px", borderRadius: "var(--radius-md)", border: "1px dashed var(--text-faint)", background: "none", color: "var(--text-faint)" }}>
               + 追加
             </button>
           </div>
@@ -146,56 +202,27 @@ export default function CreatorProfileEditPage() {
           <span style={{ color: "var(--coral-dark)" }}>✓</span>
         </div>
 
-        <button onClick={handleSave} className="btn btn-coral btn-block">
-          プロフィールを保存
+        <button onClick={handleSave} disabled={loading} className="btn btn-coral btn-block">
+          {loading ? "保存中..." : "プロフィールを保存"}
         </button>
       </div>
 
-      {/* カテゴリ選択モーダル */}
       {showCategoryModal && (
-        <div
-          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end" }}
-          onClick={() => setShowCategoryModal(false)}
-        >
-          <div
-            style={{ background: "var(--paper)", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", padding: "20px 16px 32px", width: "100%" }}
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 100, display: "flex", alignItems: "flex-end" }} onClick={() => setShowCategoryModal(false)}>
+          <div style={{ background: "var(--paper)", borderRadius: "var(--radius-lg) var(--radius-lg) 0 0", padding: "20px 16px 32px", width: "100%" }} onClick={(e) => e.stopPropagation()}>
             <p style={{ fontSize: 15, fontWeight: 700, margin: "0 0 14px" }}>カテゴリを選択</p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
               {CATEGORY_OPTIONS.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => toggleCategory(cat)}
-                  style={{
-                    fontSize: 13,
-                    padding: "7px 14px",
-                    borderRadius: "var(--radius-md)",
-                    border: "1.5px solid",
-                    borderColor: categories.includes(cat) ? "var(--coral)" : "var(--border)",
-                    background: categories.includes(cat) ? "var(--coral-light)" : "var(--paper)",
-                    color: categories.includes(cat) ? "var(--coral-dark)" : "var(--text-main)",
-                    cursor: "pointer",
-                  }}
-                >
+                <button key={cat} onClick={() => toggleCategory(cat)} style={{ fontSize: 13, padding: "7px 14px", borderRadius: "var(--radius-md)", border: "1.5px solid", borderColor: categories.includes(cat) ? "var(--coral)" : "var(--border)", background: categories.includes(cat) ? "var(--coral-light)" : "var(--paper)", color: categories.includes(cat) ? "var(--coral-dark)" : "var(--text-main)", cursor: "pointer" }}>
                   {categories.includes(cat) ? `✓ ${cat}` : cat}
                 </button>
               ))}
             </div>
             <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-              <input
-                type="text"
-                placeholder="自由入力（例：ダンス）"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") addCustom(); }}
-                style={{ flex: 1, padding: "10px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", fontSize: 13 }}
-              />
+              <input type="text" placeholder="自由入力（例：ダンス）" value={customInput} onChange={(e) => setCustomInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addCustom(); }} style={{ flex: 1, padding: "10px 13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", fontSize: 13 }} />
               <button onClick={addCustom} className="btn btn-coral" style={{ padding: "10px 16px" }}>追加</button>
             </div>
-            <button onClick={() => setShowCategoryModal(false)} className="btn btn-coral btn-block">
-              決定
-            </button>
+            <button onClick={() => setShowCategoryModal(false)} className="btn btn-coral btn-block">決定</button>
           </div>
         </div>
       )}
