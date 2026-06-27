@@ -84,7 +84,6 @@ export default function AccountPage() {
 
       <div className="page-content">
 
-        {/* カバー画像（夢追い人のみ） */}
         {user?.isCreator && (
           <div style={{ marginBottom: 24 }}>
             <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>カバー画像</label>
@@ -107,7 +106,6 @@ export default function AccountPage() {
           </div>
         )}
 
-        {/* アバター */}
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <div style={{ position: "relative", display: "inline-block" }}>
             <img
