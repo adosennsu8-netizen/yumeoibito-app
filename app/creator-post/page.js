@@ -4,70 +4,77 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CreatorTabs from "../CreatorTabs";
 import { useAuth } from "../AuthContext";
+import { db } from "../lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export default function CreatorNewPostPage() {
-  const { user, addPost, addNotification, favorites, vipList } = useAuth();
+  const { user, addNotification, favorites } = useAuth();
   const router = useRouter();
   const [toast, setToast] = useState("");
   const [vipOnly, setVipOnly] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(false);
 
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(""), 1800);
   }
 
-  function handlePost() {
+  async function handlePost() {
     if (!text.trim()) {
       showToast("本文を入力してください");
       return;
     }
-    const today = new Date();
-    const date = `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日`;
-    addPost({
-      id: `post_${Date.now()}`,
-      creatorId: user?.id || "new",
-      creatorName: user?.name || "",
-      creatorAvatar: user?.avatar || "",
-      title,
-      text,
-      isVip: vipOnly,
-      date,
-      time: "たった今",
-      likes: 0,
-      comments: [],
-    });
-    addNotification({
-      type: "post",
-      creatorId: user?.id || "new",
-      text: `${user?.name || ""}さんが新しく投稿しました`,
-    });
-    setTitle("");
-    setText("");
-    setVipOnly(false);
-    showToast("投稿しました");
+    setLoading(true);
+    try {
+      await addDoc(collection(db, "posts"), {
+        creatorId: user?.uid || user?.id || "unknown",
+        creatorName: user?.displayName || user?.name || "",
+        creatorAvatar: user?.photoURL || user?.avatar || "",
+        title,
+        text,
+        isVip: vipOnly,
+        likes: 0,
+        comments: [],
+        createdAt: serverTimestamp(),
+      });
+      addNotification({
+        type: "post",
+        creatorId: user?.uid || user?.id || "unknown",
+        text: `${user?.displayName || user?.name || ""}さんが新しく投稿しました`,
+      });
+      setTitle("");
+      setText("");
+      setVipOnly(false);
+      showToast("投稿しました");
+    } catch (e) {
+      console.error(e);
+      showToast("投稿に失敗しました");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <div className="app-shell">
       <div className="subpage-header">
-        <span>✏️</span>
+        <span>✍</span>
         <span className="title">新規投稿</span>
       </div>
 
       <CreatorTabs active="post" />
 
       <div className="page-content">
-        <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>写真</label>
+        <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>画像</label>
         <div style={{ border: "1.5px dashed var(--text-faint)", borderRadius: "var(--radius-md)", padding: 30, textAlign: "center", marginBottom: 16, color: "var(--text-faint)" }}>
           <span style={{ fontSize: 24, display: "block", margin: "0 auto 6px" }}>🖼️</span>
-          <span style={{ fontSize: "12.5px" }}>タップして写真を追加</span>
+          <span style={{ fontSize: "12.5px" }}>タップして画像を追加</span>
         </div>
 
         <div className="field">
           <label>タイトル</label>
-          <input type="text" placeholder="例：今日の窯入れ" value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input type="text" placeholder="例：今日の練習メニュー" value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
 
         <div className="field">
@@ -87,7 +94,9 @@ export default function CreatorNewPostPage() {
           </label>
         </div>
 
-        <button onClick={handlePost} className="btn btn-coral btn-block">投稿する</button>
+        <button onClick={handlePost} disabled={loading} className="btn btn-coral btn-block">
+          {loading ? "投稿中..." : "投稿する"}
+        </button>
       </div>
 
       <div style={{ position: "fixed", bottom: 90, left: "50%", transform: `translateX(-50%) translateY(${toast ? "0" : "20px"})`, background: "var(--navy)", color: "#fff", padding: "11px 22px", borderRadius: "var(--radius-pill)", fontSize: 13, opacity: toast ? 1 : 0, transition: "all 0.25s", pointerEvents: "none", zIndex: 50 }}>

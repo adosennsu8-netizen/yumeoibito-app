@@ -1,21 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CREATORS, POSTS } from "../data/creators";
 import { useAuth } from "../AuthContext";
+import { db } from "../lib/firebase";
+import {
+  collection, onSnapshot, doc, runTransaction, serverTimestamp, query, orderBy
+} from "firebase/firestore";
 
 export default function FeedPage() {
-  const { user, supportHistory, vipList, creatorPosts, addNotification } = useAuth();
+  const { user, supportHistory, vipList, addNotification } = useAuth();
   const router = useRouter();
   const [tab, setTab] = useState("all");
+  const [firestorePosts, setFirestorePosts] = useState([]);
+  const [likes, setLikes] = useState({});
 
-  const allPosts = [...creatorPosts, ...POSTS];
+  // Firestoreから投稿をリアルタイム取得
+  useEffect(() => {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const unsub = onSnapshot(q, (snap) => {
+      setFirestorePosts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, []);
 
-  const [likes, setLikes] = useState(
-    Object.fromEntries(allPosts.map((p) => [p.id, { liked: false, count: p.likes }]))
-  );
+  const allPosts = [...firestorePosts, ...POSTS];
+
+  // likesの初期化（新投稿が増えた時も対応）
+  useEffect(() => {
+    setLikes((prev) => {
+      const next = { ...prev };
+      allPosts.forEach((p) => {
+        if (!next[p.id]) next[p.id] = { liked: false, count: p.likes || 0 };
+      });
+      return next;
+    });
+  }, [firestorePosts]);
 
   const visiblePosts = tab === "following"
     ? allPosts.filter((p) =>
@@ -24,27 +46,39 @@ export default function FeedPage() {
       )
     : allPosts;
 
-  function toggleLike(postId) {
-    setLikes((prev) => {
-      const current = prev[postId];
-      if (!current.liked) {
-        const post = allPosts.find((p) => p.id === postId);
-        if (post) {
-          addNotification({
-            type: "like",
-            creatorId: post.creatorId,
-            text: `${post.creatorName || CREATORS[post.creatorId]?.name || ""}さんの投稿にいいねしました`,
-          });
-        }
+  async function toggleLike(postId) {
+    const current = likes[postId];
+    if (!current) return;
+    const nowLiked = !current.liked;
+
+    // UIを即時更新
+    setLikes((prev) => ({
+      ...prev,
+      [postId]: { liked: nowLiked, count: nowLiked ? current.count + 1 : current.count - 1 },
+    }));
+
+    // Firestoreの投稿だけ保存（ダミーPOSTSはスキップ）
+    const isFirestorePost = firestorePosts.some((p) => p.id === postId);
+    if (isFirestorePost) {
+      const ref = doc(db, "posts", postId);
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists()) return;
+        const cur = snap.data().likes || 0;
+        tx.update(ref, { likes: nowLiked ? cur + 1 : cur - 1 });
+      });
+    }
+
+    if (nowLiked) {
+      const post = allPosts.find((p) => p.id === postId);
+      if (post) {
+        addNotification({
+          type: "like",
+          creatorId: post.creatorId,
+          text: `${post.creatorName || CREATORS[post.creatorId]?.name || ""}さんの投稿にいいねしました`,
+        });
       }
-      return {
-        ...prev,
-        [postId]: {
-          liked: !current.liked,
-          count: current.liked ? current.count - 1 : current.count + 1,
-        },
-      };
-    });
+    }
   }
 
   function handleFollowingTab() {
@@ -94,14 +128,14 @@ export default function FeedPage() {
         ) : (
           visiblePosts.map((p) => {
             const c = p.creatorId && CREATORS[p.creatorId];
-            const likeState = likes[p.id] || { liked: false, count: 0 };
+            const likeState = likes[p.id] || { liked: false, count: p.likes || 0 };
             return (
               <div className="post" key={p.id}>
                 <Link href={c ? `/profile/${c.id}` : "#"} className="post-head">
                   <img src={c ? c.avatar : p.creatorAvatar} alt="" />
                   <div style={{ flex: 1 }}>
                     <p className="name">{c ? c.name : p.creatorName}</p>
-                    <p className="time">{p.time}</p>
+                    <p className="time">{p.time || (p.createdAt?.toDate?.()?.toLocaleDateString("ja-JP") ?? "")}</p>
                   </div>
                   {p.isVip && <span className="vip-badge">👑 VIP限定</span>}
                 </Link>
@@ -116,7 +150,7 @@ export default function FeedPage() {
                     {likeState.liked ? "❤️" : "🤍"} <span>{likeState.count}</span>
                   </button>
                   <Link className="comment-link" href={`/post/${p.id}`}>
-                    💬 <span>{p.comments.length}</span>
+                    💬 <span>{p.comments?.length ?? 0}</span>
                   </Link>
                 </div>
               </div>

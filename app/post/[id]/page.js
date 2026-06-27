@@ -1,28 +1,117 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CREATORS, POSTS, CREATOR_POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
+import { db } from "../../lib/firebase";
+import {
+  doc, getDoc, collection, onSnapshot, addDoc, runTransaction, serverTimestamp, query, orderBy
+} from "firebase/firestore";
 
 export default function PostDetailPage() {
   const params = useParams();
   const id = params.id;
-  const { user, creatorPosts } = useAuth();
+  const { user } = useAuth();
 
-  // POSTS → CREATOR_POSTS → creatorPosts の順で探す
-  const post =
-    POSTS.find((p) => p.id === id) ||
-    Object.values(CREATOR_POSTS).flat().find((p) => p.id === id) ||
-    creatorPosts.find((p) => p.id === id);
+  const [post, setPost] = useState(null);
+  const [isFirestorePost, setIsFirestorePost] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [comments, setComments] = useState([]);
+  const [commentInput, setCommentInput] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // 投稿をFirestore優先で取得
+  useEffect(() => {
+    async function fetchPost() {
+      // まずFirestoreで探す
+      const ref = doc(db, "posts", id);
+      const snap = await getDoc(ref);
+      if (snap.exists()) {
+        setPost({ id: snap.id, ...snap.data() });
+        setLikeCount(snap.data().likes || 0);
+        setIsFirestorePost(true);
+      } else {
+        // ダミーデータから探す
+        const found =
+          POSTS.find((p) => p.id === id) ||
+          Object.values(CREATOR_POSTS || {}).flat().find((p) => p.id === id);
+        if (found) {
+          setPost(found);
+          setLikeCount(found.likes || 0);
+        }
+      }
+      setLoading(false);
+    }
+    fetchPost();
+  }, [id]);
+
+  // Firestoreの投稿はコメントをリアルタイム取得
+  useEffect(() => {
+    if (!isFirestorePost) {
+      setComments(post?.comments || []);
+      return;
+    }
+    const q = query(
+      collection(db, "posts", id, "comments"),
+      orderBy("createdAt", "asc")
+    );
+    const unsub = onSnapshot(q, (snap) => {
+      setComments(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, [isFirestorePost, id, post]);
+
+  async function toggleLike() {
+    const nowLiked = !liked;
+    setLiked(nowLiked);
+    setLikeCount((prev) => (nowLiked ? prev + 1 : prev - 1));
+
+    if (isFirestorePost) {
+      const ref = doc(db, "posts", id);
+      await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        if (!snap.exists()) return;
+        const cur = snap.data().likes || 0;
+        tx.update(ref, { likes: nowLiked ? cur + 1 : cur - 1 });
+      });
+    }
+  }
+
+  async function postComment() {
+    const val = commentInput.trim();
+    if (!val) return;
+
+    if (isFirestorePost) {
+      await addDoc(collection(db, "posts", id, "comments"), {
+        name: user?.displayName || user?.name || "ゲスト",
+        avatar: user?.photoURL || user?.avatar || "",
+        text: val,
+        createdAt: serverTimestamp(),
+      });
+    } else {
+      // ダミー投稿はローカルのみ
+      setComments((prev) => [
+        ...prev,
+        { name: user?.displayName || user?.name || "ゲスト", avatar: user?.photoURL || user?.avatar || "", text: val },
+      ]);
+    }
+    setCommentInput("");
+  }
 
   const c = post ? CREATORS[post.creatorId] : null;
 
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post ? post.likes || 0 : 0);
-  const [comments, setComments] = useState(post ? post.comments || [] : []);
-  const [commentInput, setCommentInput] = useState("");
+  if (loading) {
+    return (
+      <div className="app-shell">
+        <div className="page-content" style={{ textAlign: "center", paddingTop: 60 }}>
+          <p style={{ color: "var(--text-faint)", fontSize: 13 }}>読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -34,25 +123,6 @@ export default function PostDetailPage() {
         </div>
       </div>
     );
-  }
-
-  function toggleLike() {
-    setLiked((prev) => !prev);
-    setLikeCount((prev) => (liked ? prev - 1 : prev + 1));
-  }
-
-  function postComment() {
-    const val = commentInput.trim();
-    if (!val) return;
-    setComments((prev) => [
-      ...prev,
-      {
-        name: user?.name || "ゲスト",
-        avatar: user?.avatar || "",
-        text: val,
-      },
-    ]);
-    setCommentInput("");
   }
 
   return (
@@ -68,7 +138,7 @@ export default function PostDetailPage() {
             <img src={c ? c.avatar : post.creatorAvatar || ""} alt="" />
             <div style={{ flex: 1 }}>
               <p className="name">{c ? c.name : post.creatorName || ""}</p>
-              <p className="time">{post.time || post.date}</p>
+              <p className="time">{post.time || post.date || (post.createdAt?.toDate?.()?.toLocaleDateString("ja-JP") ?? "")}</p>
             </div>
             {(post.vip || post.isVip) && <span className="vip-badge">👑 VIP限定</span>}
           </Link>
@@ -76,7 +146,7 @@ export default function PostDetailPage() {
           {post.image && <img className="post-image" src={post.image} alt="" />}
           <div className="post-actions">
             <button className={`like-btn ${liked ? "liked" : ""}`} onClick={toggleLike}>
-              ❤️ <span>{likeCount}</span>
+              {liked ? "❤️" : "🤍"} <span>{likeCount}</span>
             </button>
             <span className="comment-link">💬 <span>{comments.length}</span></span>
           </div>
@@ -90,7 +160,7 @@ export default function PostDetailPage() {
             </p>
           ) : (
             comments.map((cm, i) => (
-              <div key={i} style={{ display: "flex", gap: 8, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
+              <div key={cm.id || i} style={{ display: "flex", gap: 8, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
                 <img src={cm.avatar} alt="" style={{ width: 26, height: 26, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: "11.5px", fontWeight: 700, margin: "0 0 2px" }}>{cm.name}</p>
