@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { CREATORS, POSTS } from "../../data/creators";
+import { useAuth } from "../../AuthContext";
 import { useParams } from "next/navigation";
 import { CREATORS, POSTS, CURRENT_USER } from "../../data/creators";
 
 
 export default function PostDetailPage() {
+  const { user } = useAuth();
   const params = useParams();
   const id = params.id;
   const post = POSTS.find((p) => p.id === id);
@@ -39,7 +40,11 @@ export default function PostDetailPage() {
     if (!val) return;
     setComments((prev) => [
       ...prev,
-      { name: CURRENT_USER.name, avatar: CURRENT_USER.avatar, text: val },
+      {
+        name: user?.name || "ゲスト",
+        avatar: user?.avatar || "",
+        text: val,
+      },
     ]);
     setCommentInput("");
   }
