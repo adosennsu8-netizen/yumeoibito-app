@@ -262,15 +262,13 @@ export function AuthProvider({ children }) {
       await saveUserData(user.id, { notifications: updated });
     }
   }
-  async function updateUserName(newName, avatarUrl) {
+ async function updateUserName(newName, avatarUrl, coverUrl) {
     const newAvatar = avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(newName)}&background=f9a8a8&color=fff`;
-    setUser((prev) => ({
-      ...prev,
-      name: newName,
-      avatar: newAvatar,
-    }));
+    const updates = { name: newName, avatar: newAvatar };
+    if (coverUrl) updates.cover = coverUrl;
+    setUser((prev) => ({ ...prev, ...updates }));
     if (user?.id) {
-      await saveUserData(user.id, { name: newName, avatar: newAvatar });
+      await saveUserData(user.id, updates);
     }
   }
 

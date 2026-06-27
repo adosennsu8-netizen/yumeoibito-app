@@ -15,7 +15,10 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(user?.avatar || "");
   const [imageFile, setImageFile] = useState(null);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState(user?.cover || "");
+  const [coverFile, setCoverFile] = useState(null);
   const fileInputRef = useRef(null);
+  const coverInputRef = useRef(null);
 
   function showToast(msg) {
     setToast(msg);
@@ -29,6 +32,13 @@ export default function AccountPage() {
     setPreviewUrl(URL.createObjectURL(file));
   }
 
+  function handleCoverChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setCoverFile(file);
+    setCoverPreviewUrl(URL.createObjectURL(file));
+  }
+
   async function handleSave() {
     if (!name.trim()) {
       showToast("名前を入力してください");
@@ -37,18 +47,25 @@ export default function AccountPage() {
     setLoading(true);
     try {
       let avatarUrl = user?.avatar;
+      let coverUrl = user?.cover;
 
       if (imageFile) {
-        const storageRef = ref(storage, `avatars/${user.id}/${Date.now()}`);
+        const storageRef = ref(storage, `avatars/${auth.currentUser.uid}/${Date.now()}`);
         await uploadBytes(storageRef, imageFile);
         avatarUrl = await getDownloadURL(storageRef);
+      }
+
+      if (coverFile) {
+        const storageRef = ref(storage, `covers/${auth.currentUser.uid}/${Date.now()}`);
+        await uploadBytes(storageRef, coverFile);
+        coverUrl = await getDownloadURL(storageRef);
       }
 
       await updateProfile(auth.currentUser, {
         displayName: name,
         photoURL: avatarUrl,
       });
-      await updateUserName(name, avatarUrl);
+      await updateUserName(name, avatarUrl, coverUrl);
       showToast("保存しました");
     } catch (e) {
       console.error(e);
@@ -66,6 +83,31 @@ export default function AccountPage() {
       </div>
 
       <div className="page-content">
+
+        {/* カバー画像（夢追い人のみ） */}
+        {user?.isCreator && (
+          <div style={{ marginBottom: 24 }}>
+            <label style={{ fontSize: "11.5px", color: "var(--text-faint)", fontWeight: 700, display: "block", marginBottom: 8 }}>カバー画像</label>
+            <div
+              style={{ position: "relative", width: "100%", height: 130, borderRadius: "var(--radius-md)", overflow: "hidden", background: "var(--cream)", cursor: "pointer" }}
+              onClick={() => coverInputRef.current.click()}
+            >
+              {coverPreviewUrl ? (
+                <img src={coverPreviewUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "var(--text-faint)", fontSize: 13 }}>
+                  タップして設定
+                </div>
+              )}
+              <div style={{ position: "absolute", right: 10, bottom: 10, background: "var(--coral)", borderRadius: "50%", width: 30, height: 30, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 14 }}>
+                📷
+              </div>
+            </div>
+            <input ref={coverInputRef} type="file" accept="image/*" onChange={handleCoverChange} style={{ display: "none" }} />
+          </div>
+        )}
+
+        {/* アバター */}
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <div style={{ position: "relative", display: "inline-block" }}>
             <img
