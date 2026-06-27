@@ -1,26 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import { CREATORS, POSTS } from "../../data/creators";
-import { useAuth } from "../../AuthContext";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-
-
+import { useParams } from "next/navigation";
+import { CREATORS, POSTS, CREATOR_POSTS } from "../../data/creators";
+import { useAuth } from "../../AuthContext";
 
 export default function PostDetailPage() {
-  const { user } = useAuth();
   const params = useParams();
   const id = params.id;
-  const post = POSTS.find((p) => p.id === id);
+  const { user, creatorPosts } = useAuth();
+
+  // POSTS → CREATOR_POSTS → creatorPosts の順で探す
+  const post =
+    POSTS.find((p) => p.id === id) ||
+    Object.values(CREATOR_POSTS).flat().find((p) => p.id === id) ||
+    creatorPosts.find((p) => p.id === id);
+
   const c = post ? CREATORS[post.creatorId] : null;
 
   const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(post ? post.likes : 0);
-  const [comments, setComments] = useState(post ? post.comments : []);
+  const [likeCount, setLikeCount] = useState(post ? post.likes || 0 : 0);
+  const [comments, setComments] = useState(post ? post.comments || [] : []);
   const [commentInput, setCommentInput] = useState("");
 
-  if (!post || !c) {
+  if (!post) {
     return (
       <div className="app-shell">
         <div className="page-content">
@@ -54,21 +58,19 @@ export default function PostDetailPage() {
   return (
     <div className="app-shell" style={{ paddingBottom: 150 }}>
       <div className="subpage-header">
-        <Link className="back-btn" href={`/profile/${c.id}`}>
-          ←
-        </Link>
+        <Link className="back-btn" href={c ? `/profile/${c.id}` : "/"}>←</Link>
         <span className="title">投稿</span>
       </div>
 
       <div className="page-content">
         <div className="post" style={{ borderBottom: "none", paddingTop: 0 }}>
-          <Link href={`/profile/${c.id}`} className="post-head">
-            <img src={c.avatar} alt="" />
+          <Link href={c ? `/profile/${c.id}` : "#"} className="post-head">
+            <img src={c ? c.avatar : post.creatorAvatar || ""} alt="" />
             <div style={{ flex: 1 }}>
-              <p className="name">{c.name}</p>
-              <p className="time">{post.time}</p>
+              <p className="name">{c ? c.name : post.creatorName || ""}</p>
+              <p className="time">{post.time || post.date}</p>
             </div>
-            {post.vip && <span className="vip-badge">👑 VIP限定</span>}
+            {(post.vip || post.isVip) && <span className="vip-badge">👑 VIP限定</span>}
           </Link>
           <p className="post-text">{post.text}</p>
           {post.image && <img className="post-image" src={post.image} alt="" />}
@@ -89,11 +91,7 @@ export default function PostDetailPage() {
           ) : (
             comments.map((cm, i) => (
               <div key={i} style={{ display: "flex", gap: 8, padding: "10px 0", borderBottom: "1px solid var(--border)" }}>
-                <img
-                  src={cm.avatar}
-                  alt=""
-                  style={{ width: 26, height: 26, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
-                />
+                <img src={cm.avatar} alt="" style={{ width: 26, height: 26, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: "11.5px", fontWeight: 700, margin: "0 0 2px" }}>{cm.name}</p>
                   <p style={{ fontSize: 12, margin: 0, color: "var(--text-sub)" }}>{cm.text}</p>
@@ -104,50 +102,16 @@ export default function PostDetailPage() {
         </div>
       </div>
 
-      <div
-        style={{
-          position: "fixed",
-          bottom: 76,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "100%",
-          maxWidth: 480,
-          background: "var(--bg-page)",
-          borderTop: "1px solid var(--border)",
-          padding: "10px 14px",
-          display: "flex",
-          gap: 9,
-          zIndex: 25,
-        }}
-      >
+      <div style={{ position: "fixed", bottom: 76, left: "50%", transform: "translateX(-50%)", width: "100%", maxWidth: 480, background: "var(--bg-page)", borderTop: "1px solid var(--border)", padding: "10px 14px", display: "flex", gap: 9, zIndex: 25 }}>
         <input
           type="text"
           placeholder="コメントを書く"
           value={commentInput}
           onChange={(e) => setCommentInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") postComment();
-          }}
-          style={{
-            flex: 1,
-            borderRadius: "var(--radius-pill)",
-            border: "1px solid var(--border)",
-            padding: "10px 16px",
-            outline: "none",
-          }}
+          onKeyDown={(e) => { if (e.key === "Enter") postComment(); }}
+          style={{ flex: 1, borderRadius: "var(--radius-pill)", border: "1px solid var(--border)", padding: "10px 16px", outline: "none" }}
         />
-        <button
-          onClick={postComment}
-          style={{
-            background: "var(--coral)",
-            color: "#fff",
-            border: "none",
-            borderRadius: "50%",
-            width: 38,
-            height: 38,
-            flexShrink: 0,
-          }}
-        >
+        <button onClick={postComment} style={{ background: "var(--coral)", color: "#fff", border: "none", borderRadius: "50%", width: 38, height: 38, flexShrink: 0 }}>
           ➤
         </button>
       </div>

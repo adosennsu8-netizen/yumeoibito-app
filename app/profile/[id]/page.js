@@ -148,7 +148,13 @@ export default function ProfilePage() {
             posts.map((post) => {
               const locked = post.isVip && !vipMember;
               return (
-                <div key={post.id} className="card card-pad" style={{ marginBottom: 12 }}>
+                <Link
+                  key={post.id}
+                  href={`/post/${post.id}`}
+                  className="card card-pad"
+                  style={{ marginBottom: 12, display: "block" }}
+                >
+
                   <p style={{ fontSize: 11, color: "var(--text-faint)", margin: "0 0 7px", display: "flex", alignItems: "center", gap: 6 }}>
                     {post.isVip && (
                       <span style={{ background: "var(--purple-light)", color: "var(--purple)", padding: "1px 7px", borderRadius: "var(--radius-pill)", fontSize: 10, fontWeight: 700 }}>
