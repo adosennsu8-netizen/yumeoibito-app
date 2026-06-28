@@ -440,7 +440,7 @@ export const CREATORS = {
     monthlySupportCount: 32,
     createdAt: "2026年2月",
     cover: C.pottery,
-    avatar: A.a2,
+    avatar: A.a9,
     ranking: [
       { name: "ファン1", avatar: F.f4 },
       { name: "ファン2", avatar: F.f5 },
