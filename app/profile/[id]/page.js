@@ -1,11 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { CREATORS, CREATOR_POSTS } from "../../data/creators";
 import { useAuth } from "../../AuthContext";
-
+import { db } from "../../lib/firebase";
+import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
 
 export default function ProfilePage() {
   const params = useParams();
@@ -15,7 +17,31 @@ export default function ProfilePage() {
   const c = CREATORS[id] || (user?.id === id ? user : null) || (registeredCreators || []).find((r) => r.id === id);
   const favorited = isFavorite(id);
   const vipMember = isVip ? isVip(id) : false;
-  const posts = CREATOR_POSTS[id] || [];
+  const [firestorePosts, setFirestorePosts] = useState([]);
+　useEffect(() => {
+    const q = query(
+      collection(db, "posts"),
+      where("creatorId", "==", id),
+      orderBy("createdAt", "desc")
+    );
+    const unsub = onSnapshot(q, (snap) => {
+      setFirestorePosts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, [id]);
+  useEffect(() => {
+    const q = query(
+      collection(db, "posts"),
+      where("creatorId", "==", id),
+      orderBy("createdAt", "desc")
+    );
+    const unsub = onSnapshot(q, (snap) => {
+      setFirestorePosts(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
+    });
+    return () => unsub();
+  }, [id]);
+
+  const posts = [...firestorePosts, ...(CREATOR_POSTS[id] || [])];
 
   if (!c) {
     return (
