@@ -6,9 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export async function POST(req) {
   try {
     const { creatorId, creatorName, userEmail, userName } = await req.json();
-    // デバッグ用（確認後削除）
-    const keyPrefix = process.env.STRIPE_SECRET_KEY?.substring(0, 10) || "undefined";
-    console.log("STRIPE_KEY_PREFIX:", keyPrefix);
+    
 
     // 顧客作成
     const customer = await stripe.customers.create({
