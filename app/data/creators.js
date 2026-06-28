@@ -4,6 +4,55 @@
    ※20人以上のダミーデータは無限スクロールの動作確認用。
 =========================================================== */
 
+// アバター（シルエット・後ろ姿・物）
+const A = {
+  a1: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200&h=200&fit=crop",
+  a2: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=200&h=200&fit=crop",
+  a3: "https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=200&h=200&fit=crop",
+  a4: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
+  a5: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=200&h=200&fit=crop",
+  a6: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&h=200&fit=crop",
+  a7: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop",
+  a8: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=center",
+};
+
+// ファンアバター
+const F = {
+  f1: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&h=80&fit=crop",
+  f2: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=80&h=80&fit=crop",
+  f3: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&h=80&fit=crop",
+  f4: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=center",
+  f5: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=center",
+};
+
+// カバー画像
+const C = {
+  pottery: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=900&h=500&fit=crop",
+  music: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&h=500&fit=crop",
+  cafe: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=900&h=500&fit=crop",
+  mountain: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&h=500&fit=crop",
+  photo: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=900&h=500&fit=crop",
+  writing: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=900&h=500&fit=crop",
+  rock: "https://images.unsplash.com/photo-1468164016595-6108e4c60c8b?w=900&h=500&fit=crop",
+  soccer: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=900&h=500&fit=crop",
+  bakery: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=900&h=500&fit=crop",
+  illustration: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=900&h=500&fit=crop",
+  jazz: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=900&h=500&fit=crop",
+  tabletennis: "https://images.unsplash.com/photo-1611251135345-18c56206b863?w=900&h=500&fit=crop",
+  guesthouse: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=900&h=500&fit=crop",
+  sculpture: "https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=900&h=500&fit=crop",
+  singer: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
+  boxing: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=900&h=500&fit=crop",
+  brewery: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=900&h=500&fit=crop",
+  climbing: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=900&h=500&fit=crop",
+  coffee: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=900&h=500&fit=crop",
+  vintage: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=900&h=500&fit=crop",
+  guitar: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=900&h=500&fit=crop",
+  baseball: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=900&h=500&fit=crop",
+  printmaking: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=900&h=500&fit=crop",
+  dj: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=900&h=500&fit=crop",
+};
+
 export const CREATORS = {
   mizuno: {
     id: "mizuno",
@@ -18,12 +67,12 @@ export const CREATORS = {
     vipCount: 23,
     monthlySupportCount: 41,
     createdAt: "2021年4月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
+    cover: C.pottery,
+    avatar: A.a1,
     ranking: [
-      { name: "はな", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "りょう", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "みさき", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "はな", avatar: F.f1 },
+      { name: "りょう", avatar: F.f2 },
+      { name: "みさき", avatar: F.f3 },
     ],
   },
   hashimoto: {
@@ -39,12 +88,12 @@ export const CREATORS = {
     vipCount: 38,
     monthlySupportCount: 67,
     createdAt: "2024年2月",
-    cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces",
+    cover: C.music,
+    avatar: A.a2,
     ranking: [
-      { name: "ゆうき", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
-      { name: "さき", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "たくみ", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ゆうき", avatar: F.f4 },
+      { name: "さき", avatar: F.f1 },
+      { name: "たくみ", avatar: F.f2 },
     ],
   },
   otsuka: {
@@ -60,12 +109,12 @@ export const CREATORS = {
     vipCount: 12,
     monthlySupportCount: 19,
     createdAt: "2025年9月",
-    cover: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.cafe,
+    avatar: A.a3,
     ranking: [
-      { name: "みき", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "あおい", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "れい", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
+      { name: "みき", avatar: F.f3 },
+      { name: "あおい", avatar: F.f1 },
+      { name: "れい", avatar: F.f2 },
     ],
   },
   nakamura: {
@@ -81,12 +130,12 @@ export const CREATORS = {
     vipCount: 8,
     monthlySupportCount: 14,
     createdAt: "2026年6月",
-    cover: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces",
+    cover: C.mountain,
+    avatar: A.a4,
     ranking: [
-      { name: "なお", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ひろき", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ゆい", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
+      { name: "なお", avatar: F.f5 },
+      { name: "ひろき", avatar: F.f2 },
+      { name: "ゆい", avatar: F.f3 },
     ],
   },
   photography: {
@@ -102,12 +151,12 @@ export const CREATORS = {
     vipCount: 1,
     monthlySupportCount: 2,
     createdAt: "2026年1月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
+    cover: C.photo,
+    avatar: A.a5,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f1 },
+      { name: "ファン2", avatar: F.f2 },
+      { name: "ファン3", avatar: F.f3 },
     ],
   },
   writing: {
@@ -123,12 +172,12 @@ export const CREATORS = {
     vipCount: 4,
     monthlySupportCount: 7,
     createdAt: "2026年2月",
-    cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces",
+    cover: C.writing,
+    avatar: A.a6,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f2 },
+      { name: "ファン2", avatar: F.f3 },
+      { name: "ファン3", avatar: F.f4 },
     ],
   },
   rock: {
@@ -144,12 +193,12 @@ export const CREATORS = {
     vipCount: 7,
     monthlySupportCount: 12,
     createdAt: "2026年3月",
-    cover: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.rock,
+    avatar: A.a7,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f3 },
+      { name: "ファン2", avatar: F.f4 },
+      { name: "ファン3", avatar: F.f5 },
     ],
   },
   soccer: {
@@ -165,12 +214,12 @@ export const CREATORS = {
     vipCount: 10,
     monthlySupportCount: 17,
     createdAt: "2026年4月",
-    cover: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces",
+    cover: C.soccer,
+    avatar: A.a8,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f4 },
+      { name: "ファン2", avatar: F.f5 },
+      { name: "ファン3", avatar: F.f1 },
     ],
   },
   bakery: {
@@ -186,12 +235,12 @@ export const CREATORS = {
     vipCount: 13,
     monthlySupportCount: 22,
     createdAt: "2026年5月",
-    cover: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.bakery,
+    avatar: A.a1,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f5 },
+      { name: "ファン2", avatar: F.f1 },
+      { name: "ファン3", avatar: F.f2 },
     ],
   },
   illustration: {
@@ -207,12 +256,12 @@ export const CREATORS = {
     vipCount: 16,
     monthlySupportCount: 27,
     createdAt: "2026年6月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=faces",
+    cover: C.illustration,
+    avatar: A.a2,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f1 },
+      { name: "ファン2", avatar: F.f2 },
+      { name: "ファン3", avatar: F.f3 },
     ],
   },
   jazz: {
@@ -228,12 +277,12 @@ export const CREATORS = {
     vipCount: 19,
     monthlySupportCount: 32,
     createdAt: "2026年1月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=200&h=200&fit=crop&crop=faces",
+    cover: C.jazz,
+    avatar: A.a3,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f2 },
+      { name: "ファン2", avatar: F.f3 },
+      { name: "ファン3", avatar: F.f4 },
     ],
   },
   tabletennis: {
@@ -249,12 +298,12 @@ export const CREATORS = {
     vipCount: 2,
     monthlySupportCount: 2,
     createdAt: "2026年2月",
-    cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200&h=200&fit=crop&crop=faces",
+    cover: C.tabletennis,
+    avatar: A.a4,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f3 },
+      { name: "ファン2", avatar: F.f4 },
+      { name: "ファン3", avatar: F.f5 },
     ],
   },
   guesthouse: {
@@ -270,12 +319,12 @@ export const CREATORS = {
     vipCount: 5,
     monthlySupportCount: 7,
     createdAt: "2026年3月",
-    cover: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
+    cover: C.guesthouse,
+    avatar: A.a5,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f4 },
+      { name: "ファン2", avatar: F.f5 },
+      { name: "ファン3", avatar: F.f1 },
     ],
   },
   sculpture: {
@@ -291,12 +340,12 @@ export const CREATORS = {
     vipCount: 8,
     monthlySupportCount: 12,
     createdAt: "2026年4月",
-    cover: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces",
+    cover: C.sculpture,
+    avatar: A.a6,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f5 },
+      { name: "ファン2", avatar: F.f1 },
+      { name: "ファン3", avatar: F.f2 },
     ],
   },
   singer: {
@@ -312,12 +361,12 @@ export const CREATORS = {
     vipCount: 11,
     monthlySupportCount: 17,
     createdAt: "2026年5月",
-    cover: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.singer,
+    avatar: A.a7,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f1 },
+      { name: "ファン2", avatar: F.f2 },
+      { name: "ファン3", avatar: F.f3 },
     ],
   },
   boxing: {
@@ -333,12 +382,12 @@ export const CREATORS = {
     vipCount: 14,
     monthlySupportCount: 22,
     createdAt: "2026年6月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces",
+    cover: C.boxing,
+    avatar: A.a8,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f2 },
+      { name: "ファン2", avatar: F.f3 },
+      { name: "ファン3", avatar: F.f4 },
     ],
   },
   brewery: {
@@ -354,12 +403,12 @@ export const CREATORS = {
     vipCount: 17,
     monthlySupportCount: 27,
     createdAt: "2026年1月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.brewery,
+    avatar: A.a1,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f3 },
+      { name: "ファン2", avatar: F.f4 },
+      { name: "ファン3", avatar: F.f5 },
     ],
   },
   ceramics2: {
@@ -375,12 +424,12 @@ export const CREATORS = {
     vipCount: 20,
     monthlySupportCount: 32,
     createdAt: "2026年2月",
-    cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=faces",
+    cover: C.pottery,
+    avatar: A.a2,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f4 },
+      { name: "ファン2", avatar: F.f5 },
+      { name: "ファン3", avatar: F.f1 },
     ],
   },
   guitar: {
@@ -396,12 +445,12 @@ export const CREATORS = {
     vipCount: 3,
     monthlySupportCount: 2,
     createdAt: "2026年3月",
-    cover: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=200&h=200&fit=crop&crop=faces",
+    cover: C.guitar,
+    avatar: A.a3,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f5 },
+      { name: "ファン2", avatar: F.f1 },
+      { name: "ファン3", avatar: F.f2 },
     ],
   },
   baseball: {
@@ -417,12 +466,12 @@ export const CREATORS = {
     vipCount: 6,
     monthlySupportCount: 7,
     createdAt: "2026年4月",
-    cover: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=200&h=200&fit=crop&crop=faces",
+    cover: C.baseball,
+    avatar: A.a4,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f1 },
+      { name: "ファン2", avatar: F.f2 },
+      { name: "ファン3", avatar: F.f3 },
     ],
   },
   vintage: {
@@ -438,12 +487,12 @@ export const CREATORS = {
     vipCount: 9,
     monthlySupportCount: 12,
     createdAt: "2026年5月",
-    cover: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=faces",
+    cover: C.vintage,
+    avatar: A.a5,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f2 },
+      { name: "ファン2", avatar: F.f3 },
+      { name: "ファン3", avatar: F.f4 },
     ],
   },
   printmaking: {
@@ -459,12 +508,12 @@ export const CREATORS = {
     vipCount: 12,
     monthlySupportCount: 17,
     createdAt: "2026年6月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=faces",
+    cover: C.printmaking,
+    avatar: A.a6,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f3 },
+      { name: "ファン2", avatar: F.f4 },
+      { name: "ファン3", avatar: F.f5 },
     ],
   },
   dj: {
@@ -480,12 +529,12 @@ export const CREATORS = {
     vipCount: 15,
     monthlySupportCount: 22,
     createdAt: "2026年1月",
-    cover: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.dj,
+    avatar: A.a7,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f4 },
+      { name: "ファン2", avatar: F.f5 },
+      { name: "ファン3", avatar: F.f1 },
     ],
   },
   climbing: {
@@ -501,12 +550,12 @@ export const CREATORS = {
     vipCount: 18,
     monthlySupportCount: 27,
     createdAt: "2026年2月",
-    cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=faces",
+    cover: C.climbing,
+    avatar: A.a8,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f5 },
+      { name: "ファン2", avatar: F.f1 },
+      { name: "ファン3", avatar: F.f2 },
     ],
   },
   coffee: {
@@ -522,15 +571,14 @@ export const CREATORS = {
     vipCount: 1,
     monthlySupportCount: 32,
     createdAt: "2026年3月",
-    cover: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=900&h=500&fit=crop",
-    avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&crop=faces",
+    cover: C.coffee,
+    avatar: A.a1,
     ranking: [
-      { name: "ファン1", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン2", avatar: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=faces" },
-      { name: "ファン3", avatar: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=80&h=80&fit=crop&crop=faces" },
+      { name: "ファン1", avatar: F.f1 },
+      { name: "ファン2", avatar: F.f2 },
+      { name: "ファン3", avatar: F.f3 },
     ],
   },
-
 };
 
 /* 都道府県リスト（絞り込みUI用） */
@@ -564,7 +612,6 @@ export const CATEGORY_LABELS = {
   "旅・冒険": "旅・冒険",
 };
 
-/* 月間応援ランキングTOP10を算出する（monthlySupportCountの降順） */
 export function getMonthlyRankingTop10() {
   return Object.values(CREATORS)
     .slice()
@@ -572,25 +619,19 @@ export function getMonthlyRankingTop10() {
     .slice(0, 10);
 }
 
-/* createdAt（"2026年6月"のような文字列）を比較可能な数値に変換する */
 function parseCreatedAt(label) {
   const m = label.match(/(\d+)年(\d+)月/);
   if (!m) return 0;
   return Number(m[1]) * 12 + Number(m[2]);
 }
 
-/* 並び替え方式を指定して夢追い人一覧を取得する
-   sortBy: "new"（新着順、デフォルト） | "popular"（人気順） */
 export function getSortedCreators(sortBy = "new") {
   const list = Object.values(CREATORS);
   if (sortBy === "popular") {
     return list.slice().sort((a, b) => b.monthlySupportCount - a.monthlySupportCount);
   }
-  // 新着順：createdAtが新しい（数値が大きい）順
   return list.slice().sort((a, b) => parseCreatedAt(b.createdAt) - parseCreatedAt(a.createdAt));
 }
-
-/* ---------------- 投稿データ ---------------- */
 
 export const POSTS = [
   {
@@ -602,9 +643,9 @@ export const POSTS = [
     vip: false,
     likes: 12,
     comments: [
-      { name: "はな", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=faces", text: "次に開ける日も教えてください、楽しみにしてます！" },
-      { name: "りょう", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces", text: "そわそわする気持ち、わかります。応援してます。" },
-      { name: "みさき", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=80&h=80&fit=crop&crop=faces", text: "良い焼き上がりになりますように" },
+      { name: "はな", avatar: F.f1, text: "次に開ける日も教えてください、楽しみにしてます！" },
+      { name: "りょう", avatar: F.f2, text: "そわそわする気持ち、わかります。応援してます。" },
+      { name: "みさき", avatar: F.f3, text: "良い焼き上がりになりますように" },
     ],
   },
   {
@@ -616,7 +657,7 @@ export const POSTS = [
     vip: true,
     likes: 28,
     comments: [
-      { name: "ゆうき", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=faces", text: "おめでとうございます！絶対行きます" },
+      { name: "ゆうき", avatar: F.f4, text: "おめでとうございます！絶対行きます" },
     ],
   },
   {
@@ -628,7 +669,7 @@ export const POSTS = [
     vip: false,
     likes: 19,
     comments: [
-      { name: "みき", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=80&h=80&fit=crop&crop=faces", text: "床、すごく綺麗です！オープン楽しみです" },
+      { name: "みき", avatar: F.f3, text: "床、すごく綺麗です！オープン楽しみです" },
     ],
   },
   {
@@ -643,10 +684,9 @@ export const POSTS = [
   },
 ];
 
-/* 現在ログイン中のユーザー（モック）。マイページ・通知等で使用 */
 export const CURRENT_USER = {
   name: "はな",
-  avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=200&h=200&fit=crop&crop=faces",
+  avatar: F.f1,
   joinedLabel: "2025年8月から応援を始めました",
   vip: [
     { creatorId: "mizuno", nextBilling: "2026年7月15日", price: 500 },
@@ -666,10 +706,8 @@ export const NOTIFICATIONS = [
   { type: "like", creatorId: "otsuka", text: "あなたのコメントに「いいね」がつきました", time: "2日前", read: true },
 ];
 
-/* プラットフォーム手数料率（応援金額に対する割合） */
 export const PLATFORM_FEE_RATE = 0.20;
 
-/* 現在ログイン中のユーザーが夢追い人として見る収益データ（モック） */
 export const CREATOR_EARNINGS = {
   creatorId: "mizuno",
   payoutAccountRegistered: true,
@@ -686,7 +724,7 @@ export const CREATOR_EARNINGS = {
 export function calcPayout(amount) {
   return Math.round(amount * (1 - PLATFORM_FEE_RATE));
 }
-/* 夢追い人ごとの投稿（タイムライン用ダミーデータ） */
+
 export const CREATOR_POSTS = {
   mizuno: [
     { id: "m1", date: "2026年6月20日", text: "今日は初めて自分の窯で焼き上げた茶碗が完成しました。ひびも割れもなく、思ったよりずっと良い出来で…思わず声を上げてしまいました。", isVip: false },
