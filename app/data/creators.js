@@ -14,14 +14,30 @@ const A = {
   a6: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=200&h=200&fit=crop", // ペン
   a7: "https://images.unsplash.com/photo-1468164016595-6108e4c60c8b?w=200&h=200&fit=crop", // マイク
   a8: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=200&h=200&fit=crop", // サッカー
+  a9: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=200&h=200&fit=crop", // パン
+  a10: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=200&h=200&fit=crop", // イラスト
+  a11: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=200&h=200&fit=crop", // ジャズ
+  a12: "https://images.unsplash.com/photo-1611251135345-18c56206b863?w=200&h=200&fit=crop", // 卓球
+  a13: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200&h=200&fit=crop", // 宿
+  a14: "https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=200&h=200&fit=crop", // 彫刻
+  a15: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=200&h=200&fit=crop", // ボクシング
+  a16: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=200&h=200&fit=crop", // ビール
+  a17: "https://images.unsplash.com/photo-1522163182402-834f871fd851?w=200&h=200&fit=crop", // クライミング
+  a18: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&h=200&fit=crop", // コーヒー
+  a19: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=200&h=200&fit=crop", // 古着
+  a20: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=200&h=200&fit=crop", // 野球
+  a21: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=200&h=200&fit=crop", // DJ
+  a22: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop", // 版画
+  a23: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop", // 歌
+  a24: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=200&h=200&fit=crop", // スポーツ
 };
 
 const F = {
-  f1: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=80&h=80&fit=crop", // コーヒー
-  f2: "https://images.unsplash.com/photo-1549492423-400259a2e574?w=80&h=80&fit=crop", // 花
-  f3: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=80&h=80&fit=crop", // 絵
-  f4: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=80&fit=crop", // ボクシング
-  f5: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=80&h=80&fit=crop", // 野球
+  f1: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=80&h=80&fit=crop",
+  f2: "https://images.unsplash.com/photo-1549492423-400259a2e574?w=80&h=80&fit=crop",
+  f3: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=80&h=80&fit=crop",
+  f4: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=80&h=80&fit=crop",
+  f5: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=80&h=80&fit=crop",
 };
 
 // カバー画像
@@ -67,7 +83,7 @@ export const CREATORS = {
     monthlySupportCount: 41,
     createdAt: "2021年4月",
     cover: C.pottery,
-    avatar: A.a1,
+    avatar: A.a12,
     ranking: [
       { name: "はな", avatar: F.f1 },
       { name: "りょう", avatar: F.f2 },
@@ -235,7 +251,7 @@ export const CREATORS = {
     monthlySupportCount: 22,
     createdAt: "2026年5月",
     cover: C.bakery,
-    avatar: A.a1,
+    avatar: A.a9,
     ranking: [
       { name: "ファン1", avatar: F.f5 },
       { name: "ファン2", avatar: F.f1 },
@@ -319,7 +335,7 @@ export const CREATORS = {
     monthlySupportCount: 7,
     createdAt: "2026年3月",
     cover: C.guesthouse,
-    avatar: A.a5,
+    avatar: A.a13,
     ranking: [
       { name: "ファン1", avatar: F.f4 },
       { name: "ファン2", avatar: F.f5 },
@@ -340,7 +356,7 @@ export const CREATORS = {
     monthlySupportCount: 12,
     createdAt: "2026年4月",
     cover: C.sculpture,
-    avatar: A.a6,
+    avatar: A.a14,
     ranking: [
       { name: "ファン1", avatar: F.f5 },
       { name: "ファン2", avatar: F.f1 },
@@ -361,7 +377,7 @@ export const CREATORS = {
     monthlySupportCount: 17,
     createdAt: "2026年5月",
     cover: C.singer,
-    avatar: A.a7,
+    avatar: A.a23,
     ranking: [
       { name: "ファン1", avatar: F.f1 },
       { name: "ファン2", avatar: F.f2 },
@@ -382,7 +398,7 @@ export const CREATORS = {
     monthlySupportCount: 22,
     createdAt: "2026年6月",
     cover: C.boxing,
-    avatar: A.a8,
+    avatar: A.a15,
     ranking: [
       { name: "ファン1", avatar: F.f2 },
       { name: "ファン2", avatar: F.f3 },
@@ -403,7 +419,7 @@ export const CREATORS = {
     monthlySupportCount: 27,
     createdAt: "2026年1月",
     cover: C.brewery,
-    avatar: A.a1,
+    avatar: A.a16,
     ranking: [
       { name: "ファン1", avatar: F.f3 },
       { name: "ファン2", avatar: F.f4 },
@@ -445,7 +461,7 @@ export const CREATORS = {
     monthlySupportCount: 2,
     createdAt: "2026年3月",
     cover: C.guitar,
-    avatar: A.a3,
+    avatar: A.a20,
     ranking: [
       { name: "ファン1", avatar: F.f5 },
       { name: "ファン2", avatar: F.f1 },
@@ -466,7 +482,7 @@ export const CREATORS = {
     monthlySupportCount: 7,
     createdAt: "2026年4月",
     cover: C.baseball,
-    avatar: A.a4,
+    avatar: A.a19,
     ranking: [
       { name: "ファン1", avatar: F.f1 },
       { name: "ファン2", avatar: F.f2 },
@@ -487,7 +503,7 @@ export const CREATORS = {
     monthlySupportCount: 12,
     createdAt: "2026年5月",
     cover: C.vintage,
-    avatar: A.a5,
+    avatar: A.a22,
     ranking: [
       { name: "ファン1", avatar: F.f2 },
       { name: "ファン2", avatar: F.f3 },
@@ -508,7 +524,7 @@ export const CREATORS = {
     monthlySupportCount: 17,
     createdAt: "2026年6月",
     cover: C.printmaking,
-    avatar: A.a6,
+    avatar: A.a21,
     ranking: [
       { name: "ファン1", avatar: F.f3 },
       { name: "ファン2", avatar: F.f4 },
@@ -529,7 +545,7 @@ export const CREATORS = {
     monthlySupportCount: 22,
     createdAt: "2026年1月",
     cover: C.dj,
-    avatar: A.a7,
+    avatar: A.a17,
     ranking: [
       { name: "ファン1", avatar: F.f4 },
       { name: "ファン2", avatar: F.f5 },
@@ -550,7 +566,7 @@ export const CREATORS = {
     monthlySupportCount: 27,
     createdAt: "2026年2月",
     cover: C.climbing,
-    avatar: A.a8,
+    avatar: A.a18,
     ranking: [
       { name: "ファン1", avatar: F.f5 },
       { name: "ファン2", avatar: F.f1 },
@@ -571,7 +587,7 @@ export const CREATORS = {
     monthlySupportCount: 32,
     createdAt: "2026年3月",
     cover: C.coffee,
-    avatar: A.a1,
+    avatar: A.a24,
     ranking: [
       { name: "ファン1", avatar: F.f1 },
       { name: "ファン2", avatar: F.f2 },
