@@ -16,6 +16,10 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  collection,
+  query,
+  where,
+  onSnapshot,
 } from "firebase/firestore";
 import { auth, db } from "./lib/firebase";
 
@@ -67,6 +71,15 @@ export function AuthProvider({ children }) {
       setLoading(false);
     });
     return () => unsubscribe();
+  }, []);
+
+  // Firestoreからクリエイター一覧をリアルタイム取得
+  useEffect(() => {
+    const q = query(collection(db, "users"), where("isCreator", "==", true));
+    const unsub = onSnapshot(q, (snap) => {
+      setRegisteredCreators(snap.docs.map((d) => ({ ...d.data(), id: d.id })));
+    });
+    return () => unsub();
   }, []);
 
   async function saveUserData(uid, data) {
