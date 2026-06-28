@@ -6,23 +6,22 @@
 
 // アバター（シルエット・後ろ姿・物）
 const A = {
-  a1: "https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=200&h=200&fit=crop",
-  a2: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=200&h=200&fit=crop",
-  a3: "https://images.unsplash.com/photo-1520333789090-1afc82db536a?w=200&h=200&fit=crop",
-  a4: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop",
-  a5: "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=200&h=200&fit=crop",
-  a6: "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=200&h=200&fit=crop",
-  a7: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop",
-  a8: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=center",
+  a1: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=200&h=200&fit=crop", // 陶器
+  a2: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=200&h=200&fit=crop", // ギター
+  a3: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=200&h=200&fit=crop", // カフェ
+  a4: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&h=200&fit=crop", // 山
+  a5: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=200&h=200&fit=crop", // カメラ
+  a6: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=200&h=200&fit=crop", // ペン
+  a7: "https://images.unsplash.com/photo-1468164016595-6108e4c60c8b?w=200&h=200&fit=crop", // マイク
+  a8: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=200&h=200&fit=crop", // サッカー
 };
 
-// ファンアバター
 const F = {
-  f1: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&h=80&fit=crop",
-  f2: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=80&h=80&fit=crop",
-  f3: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=80&h=80&fit=crop",
-  f4: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=80&h=80&fit=crop&crop=center",
-  f5: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=80&h=80&fit=crop&crop=center",
+  f1: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=80&h=80&fit=crop", // コーヒー
+  f2: "https://images.unsplash.com/photo-1549492423-400259a2e574?w=80&h=80&fit=crop", // 花
+  f3: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=80&h=80&fit=crop", // 絵
+  f4: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=80&fit=crop", // ボクシング
+  f5: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=80&h=80&fit=crop", // 野球
 };
 
 // カバー画像
