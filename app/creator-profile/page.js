@@ -29,6 +29,7 @@ export default function CreatorProfileEditPage() {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [customInput, setCustomInput] = useState("");
 　const [prefOpen, setPrefOpen] = useState(false);
+  const [visible, setVisible] = useState(user?.visible !== false);
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
   const [avatarFile, setAvatarFile] = useState(null);
   const [coverPreview, setCoverPreview] = useState(user?.cover || "");
@@ -80,6 +81,7 @@ export default function CreatorProfileEditPage() {
         cover: coverUrl,
         categories,
         categoryLabels: categories,
+        visible,
       });
       showToast("プロフィールを保存しました");
     } catch (e) {
@@ -214,6 +216,17 @@ export default function CreatorProfileEditPage() {
           <span style={{ color: "var(--coral-dark)" }}>✓</span>
         </div>
 
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+          <div>
+            <p style={{ fontSize: "13.5px", fontWeight: 700, margin: "0 0 2px" }}>プロフィールを公開する</p>
+            <p style={{ fontSize: "11.5px", color: "var(--text-faint)", margin: 0 }}>オフにするとトップページに表示されません</p>
+          </div>
+          <label className="toggle">
+            <input type="checkbox" checked={visible} onChange={(e) => setVisible(e.target.checked)} />
+            <span className="track"></span>
+            <span className="knob"></span>
+          </label>
+        </div>
         <button onClick={handleSave} disabled={loading} className="btn btn-coral btn-block">
           {loading ? "保存中..." : "プロフィールを保存"}
         </button>

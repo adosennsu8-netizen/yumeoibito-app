@@ -23,7 +23,7 @@ export default function HomePage() {
   const top10 = getMonthlyRankingTop10();
 
   const sortedFiltered = useMemo(() => {
-    const allCreators = [...registeredCreators, ...getSortedCreators(sortBy)];
+    const allCreators = [...registeredCreators.filter((c) => c.visible !== false), ...getSortedCreators(sortBy)];
     const sorted = sortBy === "new" ? allCreators : allCreators.sort((a, b) => (b.monthlySupportCount || 0) - (a.monthlySupportCount || 0));
     return sorted.filter((c) => {
       const matchesCat = activeCat === "all" || (c.categories || []).includes(activeCat);
