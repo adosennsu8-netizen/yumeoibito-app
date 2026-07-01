@@ -12,7 +12,7 @@ export default function ProfilePage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id;
-  const { user, toggleFavorite, isFavorite, isVip, registeredCreators, addNotification } = useAuth();
+  const { user, toggleFavorite, isFavorite, isVip, registeredCreators, addNotification, addBlock } = useAuth();
   const c = CREATORS[id] || (user?.id === id ? user : null) || (registeredCreators || []).find((r) => r.id === id);
   const favorited = isFavorite(id);
   const vipMember = isVip ? isVip(id) : false;
@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState("");
   const [toast, setToast] = useState("");
-
+  
   useEffect(() => {
     const q = query(
       collection(db, "posts"),
@@ -60,10 +60,15 @@ export default function ProfilePage() {
     }
   }
 
-  function handleBlock() {
+  async function handleBlock() {
+    if (!user) {
+      router.push(`/start?redirect=/profile/${id}`);
+      return;
+    }
+    await addBlock(id);
     setShowMenu(false);
     showToast(`${c?.name}さんをブロックしました`);
-    // TODO: Firestoreにブロックリストを保存する実装
+    setTimeout(() => router.push("/"), 1500);
   }
 
   if (!c) {

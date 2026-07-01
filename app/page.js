@@ -16,14 +16,14 @@ export default function HomePage() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [prefOpen, setPrefOpen] = useState(false);
   const loadMoreRef = useRef(null);
-  const { user, toggleFavorite, isFavorite, registeredCreators } = useAuth();
+  const { user, toggleFavorite, isFavorite, registeredCreators, isBlocked } = useAuth();
   const router = useRouter();
 
   const categories = ["all", "美容", "音楽", "スポーツ", "アート", "料理", "芸能", "起業", "クリエイター", "テクノロジー", "ファッション", "執筆・文学", "教育・指導", "農業・自然", "伝統工芸", "旅・冒険"];
   const top10 = getMonthlyRankingTop10();
 
   const sortedFiltered = useMemo(() => {
-    const allCreators = [...registeredCreators.filter((c) => c.visible !== false), ...getSortedCreators(sortBy)];
+    const allCreators = [...registeredCreators.filter((c) => c.visible !== false && !isBlocked(c.id)), ...getSortedCreators(sortBy).filter((c) => !isBlocked(c.id))];
     const sorted = sortBy === "new" ? allCreators : allCreators.sort((a, b) => (b.monthlySupportCount || 0) - (a.monthlySupportCount || 0));
     return sorted.filter((c) => {
       const matchesCat = activeCat === "all" || (c.categories || []).includes(activeCat);

@@ -61,6 +61,7 @@ export function AuthProvider({ children }) {
         setVipList(userData.vipList || []);
         setSupportHistory(userData.supportHistory || []);
         setNotifications(userData.notifications || []);
+        setBlockList(userData.blockList || []);
       } else {
         setUser(null);
         setFavorites([]);
@@ -129,6 +130,7 @@ export function AuthProvider({ children }) {
     setSupportHistory([]);
     setCreatorPosts([]);
     setNotifications([]);
+    setBlockList([]);
   }
 
   async function loginAsCreator(profile) {
@@ -162,6 +164,28 @@ export function AuthProvider({ children }) {
 
   function isVip(creatorId) {
     return vipList.some((v) => v.creatorId === creatorId);
+  }
+
+  const [blockList, setBlockList] = useState([]);
+
+  function isBlocked(creatorId) {
+    return blockList.includes(creatorId);
+  }
+
+  async function addBlock(creatorId) {
+    const newBlockList = [...blockList, creatorId];
+    setBlockList(newBlockList);
+    if (user?.id) {
+      await saveUserData(user.id, { blockList: newBlockList });
+    }
+  }
+
+  async function removeBlock(creatorId) {
+    const newBlockList = blockList.filter((id) => id !== creatorId);
+    setBlockList(newBlockList);
+    if (user?.id) {
+      await saveUserData(user.id, { blockList: newBlockList });
+    }
   }
 
   async function cancelVip(creatorId) {
@@ -298,7 +322,8 @@ export function AuthProvider({ children }) {
       creatorPosts, addPost,
       registeredCreators, registerCreator, updateCreatorProfile,
       notifications, addNotification, markAllRead,updateUserName,
-    }}>
+      blockList, isBlocked, addBlock, removeBlock,
+   }}>
       {children}
     </AuthContext.Provider>
   );
