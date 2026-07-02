@@ -110,7 +110,31 @@ export default function HelpPage() {
             📧 support@blossom.app
           </a>
         </div>
-
+        {/* 子どもの安全に関する報告 */}
+        <div className="card card-pad" style={{ marginBottom: 16 }}>
+          <p className="section-title">🛡️ 子どもの安全に関する報告</p>
+          <p style={{ fontSize: "13px", color: "var(--text-sub)", lineHeight: 1.8, margin: "0 0 14px" }}>
+            児童の安全に関する懸念（不適切なコンテンツやアカウントなど）を発見した場合は、以下より直接ご報告ください。当社は速やかに調査・対応します。
+          </p>
+          <a href="mailto:support@blossom.app?subject=%E5%AD%90%E3%81%A9%E3%82%82%E3%81%AE%E5%AE%89%E5%85%A8%E3%81%AB%E9%96%A2%E3%81%99%E3%82%8B%E5%A0%B1%E5%91%8A"
+            style={{
+              display: "block",
+              textAlign: "center",
+              padding: "12px 0",
+              borderRadius: "var(--radius-md)",
+              background: "var(--coral-light)",
+              color: "var(--coral-dark)",
+              fontSize: "13.5px",
+              fontWeight: 700,
+              textDecoration: "none",
+            }}
+          >
+            🛡️ 子どもの安全に関する懸念を報告する
+          </a>
+          <p style={{ fontSize: "11px", color: "var(--text-faint)", margin: "10px 0 0" }}>
+            詳しくは<Link href="/child-safety" style={{ color: "var(--text-faint)", textDecoration: "underline" }}>子どもの安全に関する方針</Link>をご覧ください。
+          </p>
+        </div>
         {/* 規約・ポリシー */}
         <div className="card card-pad" style={{ marginBottom: 16 }}>
           <p className="section-title">📄 規約・ポリシー</p>
