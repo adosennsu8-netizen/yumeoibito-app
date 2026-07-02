@@ -181,7 +181,7 @@ export function AuthProvider({ children }) {
   }
 
   async function removeBlock(creatorId) {
-    onClick={async () => { await logout(); window.location.href = "/"; }}
+    const newBlockList = blockList.filter((id) => id !== creatorId);
     setBlockList(newBlockList);
     if (user?.id) {
       await saveUserData(user.id, { blockList: newBlockList });
